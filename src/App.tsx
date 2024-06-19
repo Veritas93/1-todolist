@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import "./App.css";
 import { Todolist } from "./Todolist";
 
@@ -9,7 +8,7 @@ export type TaskType = {
 };
 
 function App() {
-  const tasks1: Array<TaskType> = [
+  const tasks1: TaskType[] = [
     { id: 1, title: "HTML&CSS", isDone: true },
     { id: 2, title: "JS", isDone: true },
     { id: 3, title: "ReactJS", isDone: false },
@@ -18,7 +17,7 @@ function App() {
     { id: 6, title: "RTK query", isDone: false },
   ];
 
-  const tasks2: Array<TaskType> = [];
+  const tasks2: TaskType[] = [];
   return (
     <>
       <Todolist title="What to learn" tasks={tasks1} date="30.01.2024" />

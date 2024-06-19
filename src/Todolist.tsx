@@ -1,5 +1,6 @@
 import { TaskType } from "./App";
 import { Button } from "./Button";
+import { TaskItem } from "./TaskItem";
 
 export type TodolistPropsType = {
   title: string;
@@ -8,6 +9,9 @@ export type TodolistPropsType = {
 };
 
 export const Todolist = ({ title, tasks, date }: TodolistPropsType) => {
+  const TaskMap = tasks.map((task) => {
+    return <TaskItem id={task.id} isDone={task.isDone} title={task.title} />;
+  });
   return (
     <div>
       <h3>{title}</h3>
@@ -15,20 +19,7 @@ export const Todolist = ({ title, tasks, date }: TodolistPropsType) => {
         <input />
         <Button title="+" />
       </div>
-      {tasks.length === 0 ? (
-        <p>Тасок нет</p>
-      ) : (
-        <ul>
-          {tasks.map((task) => {
-            return (
-              <li key={task.id}>
-                <input type="checkbox" checked={task.isDone} />
-                <span>{task.title}</span>
-              </li>
-            );
-          })}
-        </ul>
-      )}
+      {tasks.length === 0 ? <p>Тасок нет</p> : <ul>{TaskMap}</ul>}
       <div>
         <Button title="All" />
         <Button title="Active" />
