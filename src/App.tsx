@@ -1,27 +1,60 @@
+import { useState } from "react";
 import "./App.css";
 import { Todolist } from "./Todolist";
+import { v1 } from "uuid";
 
 export type TaskType = {
-  id: number;
+  id: string;
   title: string;
   isDone: boolean;
 };
 
-function App() {
-  const tasks1: TaskType[] = [
-    { id: 1, title: "HTML&CSS", isDone: true },
-    { id: 2, title: "JS", isDone: true },
-    { id: 3, title: "ReactJS", isDone: false },
-    { id: 4, title: "Redux", isDone: false },
-    { id: 5, title: "Typescript", isDone: false },
-    { id: 6, title: "RTK query", isDone: false },
-  ];
+export type FilterType = "all" | "active" | "completed";
 
-  const tasks2: TaskType[] = [];
+function App() {
+  const [filter, setFilter] = useState<FilterType>("all");
+
+  const [tasks, setTasks] = useState<TaskType[]>([
+    { id: v1(), title: "HTML&CSS", isDone: true },
+    { id: v1(), title: "JS", isDone: true },
+    { id: v1(), title: "ReactJS", isDone: false },
+    { id: v1(), title: "Redux", isDone: false },
+    { id: v1(), title: "Typescript", isDone: false },
+    { id: v1(), title: "RTK query", isDone: false },
+  ]);
+
+  const removeTask = (id: string) => {
+    const NewTasks = tasks.filter((t) => t.id !== id);
+    setTasks(NewTasks);
+  };
+
+  const addTask = (title: string) => {
+    const newTask: TaskType = { id: v1(), title: title, isDone: false };
+    setTasks([newTask, ...tasks]);
+  };
+
+  let filterTasksForTodollist: TaskType[] = tasks;
+
+  if (filter === "active") {
+    filterTasksForTodollist = tasks.filter((t) => !t.isDone);
+  }
+  if (filter === "completed") {
+    filterTasksForTodollist = tasks.filter((t) => t.isDone);
+  }
+  const changeFilter = (NewFilterValue: FilterType) => {
+    setFilter(NewFilterValue);
+  };
   return (
     <>
-      <Todolist title="What to learn" tasks={tasks1} date="30.01.2024" />
-      <Todolist title="Songs" tasks={tasks2} />
+      <Todolist
+        title="What to learn"
+        tasks={filterTasksForTodollist}
+        date="30.01.2024"
+        removeTask={removeTask}
+        changeFilter={changeFilter}
+        addTask={addTask}
+      />
+      {/* <Todolist title="Songs" tasks={tasks2} /> */}
     </>
   );
 }
