@@ -23,6 +23,15 @@ function App() {
     { id: v1(), title: "RTK query", isDone: false },
   ]);
 
+  const changeTasksStatus = (taskID: string, isDone: boolean) => {
+    // const currentTask = tasks.find((el) => taskID === el.id);
+    // if (currentTask) {
+    //   currentTask.isDone = isDone;
+    setTasks(
+      tasks.map((el) => (el.id === taskID ? { ...el, isDone: isDone } : el))
+    );
+  };
+
   const removeTask = (id: string) => {
     const NewTasks = tasks.filter((t) => t.id !== id);
     setTasks(NewTasks);
@@ -53,6 +62,7 @@ function App() {
         removeTask={removeTask}
         changeFilter={changeFilter}
         addTask={addTask}
+        changeTasksStatus={changeTasksStatus}
       />
       {/* <Todolist title="Songs" tasks={tasks2} /> */}
     </>

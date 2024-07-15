@@ -11,6 +11,7 @@ export type TodolistPropsType = {
   removeTask: (id: string) => void;
   changeFilter: (NewFilterValue: FilterType) => void;
   addTask: (title: string) => void;
+  changeTasksStatus: (taskID: string, isDone: boolean) => void;
 };
 
 export const Todolist = ({
@@ -20,6 +21,7 @@ export const Todolist = ({
   removeTask,
   changeFilter,
   addTask,
+  changeTasksStatus,
 }: TodolistPropsType) => {
   const taskInputRef = useRef<HTMLInputElement>(null);
   const TaskMap = tasks.map((task) => {
@@ -29,6 +31,7 @@ export const Todolist = ({
         isDone={task.isDone}
         title={task.title}
         removeTask={removeTask}
+        changeTasksStatus={changeTasksStatus}
       />
     );
   });
