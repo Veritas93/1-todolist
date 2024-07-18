@@ -5,16 +5,18 @@ import { Button } from "./Button";
 import { TaskItem } from "./TaskItem";
 
 export type TodolistPropsType = {
+  tasksId: string;
   title: string;
   tasks: TaskType[];
   date?: string;
   removeTask: (id: string) => void;
   changeFilter: (NewFilterValue: FilterType) => void;
   addTask: (title: string) => void;
-  changeTasksStatus: (taskID: string, isDone: boolean) => void;
+  changeTasksStatus: (taskID: string, id: string, isDone: boolean) => void;
 };
 
-export const Todolist = ({
+const TodolistRef = ({
+  tasksId,
   title,
   tasks,
   date,
@@ -27,6 +29,7 @@ export const Todolist = ({
   const TaskMap = tasks.map((task) => {
     return (
       <TaskItem
+        tasksId={tasksId}
         id={task.id}
         isDone={task.isDone}
         title={task.title}

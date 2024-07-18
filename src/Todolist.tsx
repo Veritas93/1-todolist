@@ -5,16 +5,22 @@ import s from "./TodoList.module.css";
 import { TaskItem } from "./TaskItem";
 
 export type TodolistPropsType = {
+  tasksId: string;
+  filter: FilterType;
   title: string;
   tasks: TaskType[];
   date?: string;
-  removeTask: (id: string) => void;
-  changeFilter: (NewFilterValue: FilterType) => void;
-  addTask: (title: string) => void;
-  changeTasksStatus: (taskID: string, isDone: boolean) => void;
+
+  removeTask: (taskID: string, id: string) => void;
+  changeFilter: (tasksId: string, NewFilterValue: FilterType) => void;
+  addTask: (taskID: string, title: string) => void;
+  changeTasksStatus: (taskID: string, id: string, isDone: boolean) => void;
+  removeTodolist: (taskID: string) => void;
 };
 
 export const Todolist = ({
+  filter,
+  tasksId,
   title,
   tasks,
   date,
@@ -22,15 +28,17 @@ export const Todolist = ({
   changeFilter,
   addTask,
   changeTasksStatus,
+  removeTodolist,
 }: TodolistPropsType) => {
   const [taskTitle, setTaskTitle] = useState("");
   // const [error, setError] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<FilterType>("all");
+  // const [filter, setFilter] = useState<FilterType>("all");
 
   const TaskMap = tasks.map((task) => {
     return (
       <TaskItem
+        tasksId={tasksId}
         id={task.id}
         isDone={task.isDone}
         title={task.title}
@@ -42,7 +50,7 @@ export const Todolist = ({
 
   const addTaskHandler = () => {
     if (taskTitle.trim()) {
-      addTask(taskTitle.trim());
+      addTask(tasksId, taskTitle.trim());
       setTaskTitle("");
     } else {
       setError("Title is required!");
@@ -58,18 +66,15 @@ export const Todolist = ({
     e.key === "Enter" && addTaskHandler();
 
   const setAllTasksHandler = () => {
-    changeFilter("all");
-    setFilter("all");
+    changeFilter(tasksId, "all");
   };
 
   const setActiveTasksHandler = () => {
-    changeFilter("active");
-    setFilter("active");
+    changeFilter(tasksId, "active");
   };
 
   const setCompletedTasksHandler = () => {
-    changeFilter("completed");
-    setFilter("completed");
+    changeFilter(tasksId, "completed");
   };
   const isAddTaskButtonDisable = !taskTitle.trim();
   const userTaskTitleLengthWarning = taskTitle.length > 15 && (
@@ -77,7 +82,13 @@ export const Todolist = ({
   );
   return (
     <div>
-      <h3>{title}</h3>
+      <h3>
+        {title}
+        <Button
+          title="x"
+          onClickButtonHandler={() => removeTodolist(tasksId)}
+        ></Button>
+      </h3>
       <div>
         <input
           className={error ? s.error : ""}
@@ -113,7 +124,7 @@ export const Todolist = ({
 
         <Button
           filter={filter}
-          title="аll"
+          title="all"
           onClickButtonHandler={setAllTasksHandler}
         />
         <Button

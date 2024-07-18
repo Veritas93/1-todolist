@@ -3,14 +3,16 @@ import { Button } from "./Button";
 import s from "./TodoList.module.css";
 
 type TaskItemType = {
+  tasksId: string;
   id: string;
   isDone: boolean;
   title: string;
-  removeTask: (id: string) => void;
-  changeTasksStatus: (taskID: string, isDone: boolean) => void;
+  removeTask: (taskID: string, id: string) => void;
+  changeTasksStatus: (taskID: string, id: string, isDone: boolean) => void;
 };
 
 export const TaskItem = ({
+  tasksId,
   id,
   isDone,
   title,
@@ -18,10 +20,10 @@ export const TaskItem = ({
   changeTasksStatus,
 }: TaskItemType) => {
   const changeTasksStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    changeTasksStatus(id, e.currentTarget.checked);
+    changeTasksStatus(tasksId, id, e.currentTarget.checked);
   };
   const removeTaskHandler = () => {
-    removeTask(id);
+    removeTask(tasksId, id);
   };
   return (
     <li key={id} className={isDone ? s.isDone : ""}>
