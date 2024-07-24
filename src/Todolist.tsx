@@ -1,8 +1,8 @@
-import { ChangeEvent, useState, KeyboardEvent } from "react";
-import { FilterType, TaskType } from "./App";
-import { Button } from "./Button";
-import s from "./TodoList.module.css";
-import { TaskItem } from "./TaskItem";
+import { FilterType, TaskType } from './App';
+import { Button } from './Button';
+import { TaskItem } from './TaskItem';
+import { AddItemForm } from './AddItemForm';
+import { EditableSpan } from './EditableSpan';
 
 export type TodolistPropsType = {
   tasksId: string;
@@ -16,6 +16,8 @@ export type TodolistPropsType = {
   addTask: (taskID: string, title: string) => void;
   changeTasksStatus: (taskID: string, id: string, isDone: boolean) => void;
   removeTodolist: (taskID: string) => void;
+  changeTasksTitle: (taskID: string, id: string, title: string) => void;
+  changeTodolistTitle: (taskID: string, title: string) => void;
 };
 
 export const Todolist = ({
@@ -29,12 +31,9 @@ export const Todolist = ({
   addTask,
   changeTasksStatus,
   removeTodolist,
+  changeTasksTitle,
+  changeTodolistTitle,
 }: TodolistPropsType) => {
-  const [taskTitle, setTaskTitle] = useState("");
-  // const [error, setError] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  // const [filter, setFilter] = useState<FilterType>("all");
-
   const TaskMap = tasks.map((task) => {
     return (
       <TaskItem
@@ -44,65 +43,40 @@ export const Todolist = ({
         title={task.title}
         removeTask={removeTask}
         changeTasksStatus={changeTasksStatus}
+        changeTasksTitle={changeTasksTitle}
       />
     );
   });
 
-  const addTaskHandler = () => {
-    if (taskTitle.trim()) {
-      addTask(tasksId, taskTitle.trim());
-      setTaskTitle("");
-    } else {
-      setError("Title is required!");
-    }
+  const addItemCallback = (taskTitle: string) => {
+    addTask(tasksId, taskTitle);
   };
 
-  const changeTaskTitle = (e: ChangeEvent<HTMLInputElement>) => {
-    setError(null);
-    setTaskTitle(e.currentTarget.value);
+  const changeTodolistTitleCallback = (newTitle: string) => {
+    changeTodolistTitle(tasksId, newTitle);
   };
-
-  const keyDownAddTaskHandler = (e: KeyboardEvent<HTMLInputElement>) =>
-    e.key === "Enter" && addTaskHandler();
 
   const setAllTasksHandler = () => {
-    changeFilter(tasksId, "all");
+    changeFilter(tasksId, 'all');
   };
 
   const setActiveTasksHandler = () => {
-    changeFilter(tasksId, "active");
+    changeFilter(tasksId, 'active');
   };
 
   const setCompletedTasksHandler = () => {
-    changeFilter(tasksId, "completed");
+    changeFilter(tasksId, 'completed');
   };
-  const isAddTaskButtonDisable = !taskTitle.trim();
-  const userTaskTitleLengthWarning = taskTitle.length > 15 && (
-    <div className={s.error}>Your task title is too long</div>
-  );
   return (
     <div>
       <h3>
-        {title}
+        <EditableSpan title={title} changeTitle={changeTodolistTitleCallback} />
         <Button
           title="x"
           onClickButtonHandler={() => removeTodolist(tasksId)}
         ></Button>
       </h3>
-      <div>
-        <input
-          className={error ? s.error : ""}
-          value={taskTitle}
-          onChange={changeTaskTitle}
-          onKeyDown={keyDownAddTaskHandler}
-        />
-        <Button
-          title="+"
-          onClickButtonHandler={addTaskHandler}
-          disabled={isAddTaskButtonDisable}
-        />
-        {userTaskTitleLengthWarning}
-      </div>
+      <AddItemForm addItem={addItemCallback} />
       {tasks.length === 0 ? <p>Тасок нет</p> : <ul>{TaskMap}</ul>}
       <div>
         {/* <Button

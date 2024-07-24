@@ -1,6 +1,7 @@
-import { ChangeEvent } from "react";
-import { Button } from "./Button";
-import s from "./TodoList.module.css";
+import { ChangeEvent } from 'react';
+import { Button } from './Button';
+import s from './TodoList.module.css';
+import { EditableSpan } from './EditableSpan';
 
 type TaskItemType = {
   tasksId: string;
@@ -9,6 +10,7 @@ type TaskItemType = {
   title: string;
   removeTask: (taskID: string, id: string) => void;
   changeTasksStatus: (taskID: string, id: string, isDone: boolean) => void;
+  changeTasksTitle: (taskID: string, id: string, title: string) => void;
 };
 
 export const TaskItem = ({
@@ -18,6 +20,7 @@ export const TaskItem = ({
   title,
   removeTask,
   changeTasksStatus,
+  changeTasksTitle,
 }: TaskItemType) => {
   const changeTasksStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
     changeTasksStatus(tasksId, id, e.currentTarget.checked);
@@ -25,14 +28,18 @@ export const TaskItem = ({
   const removeTaskHandler = () => {
     removeTask(tasksId, id);
   };
+
+  const changeTasksTitleCallback = (newTitle: string) => {
+    changeTasksTitle(tasksId, id, newTitle);
+  };
   return (
-    <li key={id} className={isDone ? s.isDone : ""}>
+    <li key={id} className={isDone ? s.isDone : ''}>
       <input
         type="checkbox"
         checked={isDone}
         onChange={changeTasksStatusHandler}
       />
-      <span>{title}</span>
+      <EditableSpan title={title} changeTitle={changeTasksTitleCallback} />
       <Button onClickButtonHandler={removeTaskHandler} title="x" />
     </li>
   );
