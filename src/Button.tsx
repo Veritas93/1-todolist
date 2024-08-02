@@ -15,7 +15,6 @@ export const Button = ({
   disabled,
   filter,
 }: ButtonPropsType) => {
-  console.log(`tyt: ${typeof filter} ${typeof title} ${filter === title}`);
   return (
     <button
       disabled={disabled}

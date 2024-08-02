@@ -1,7 +1,10 @@
 import { ChangeEvent } from 'react';
-import { Button } from './Button';
-import s from './TodoList.module.css';
 import { EditableSpan } from './EditableSpan';
+import IconButton from '@mui/material/IconButton';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import Checkbox from '@mui/material/Checkbox';
+import ListItem from '@mui/material/ListItem';
+import { getListItemSx } from './Todolist.Styles';
 
 type TaskItemType = {
   tasksId: string;
@@ -33,14 +36,19 @@ export const TaskItem = ({
     changeTasksTitle(tasksId, id, newTitle);
   };
   return (
-    <li key={id} className={isDone ? s.isDone : ''}>
-      <input
-        type="checkbox"
-        checked={isDone}
-        onChange={changeTasksStatusHandler}
-      />
-      <EditableSpan title={title} changeTitle={changeTasksTitleCallback} />
-      <Button onClickButtonHandler={removeTaskHandler} title="x" />
-    </li>
+    <ListItem disablePadding key={id} sx={getListItemSx(isDone)}>
+      <div>
+        <Checkbox
+          size="small"
+          color="secondary"
+          checked={isDone}
+          onChange={changeTasksStatusHandler}
+        />
+        <EditableSpan title={title} changeTitle={changeTasksTitleCallback} />
+      </div>
+      <IconButton onClick={removeTaskHandler} color="primary">
+        <DeleteOutlineIcon fontSize="small" />
+      </IconButton>
+    </ListItem>
   );
 };

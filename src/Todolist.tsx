@@ -1,8 +1,13 @@
 import { FilterType, TaskType } from './App';
-import { Button } from './Button';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { TaskItem } from './TaskItem';
 import { AddItemForm } from './AddItemForm';
 import { EditableSpan } from './EditableSpan';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import Box from '@mui/material/Box';
+import { buttonsContainerSx } from './Todolist.Styles';
 
 export type TodolistPropsType = {
   tasksId: string;
@@ -71,47 +76,42 @@ export const Todolist = ({
     <div>
       <h3>
         <EditableSpan title={title} changeTitle={changeTodolistTitleCallback} />
-        <Button
-          title="x"
-          onClickButtonHandler={() => removeTodolist(tasksId)}
-        ></Button>
+        <IconButton onClick={() => removeTodolist(tasksId)} color="primary">
+          <DeleteOutlineIcon fontSize="small" />
+        </IconButton>
       </h3>
       <AddItemForm addItem={addItemCallback} />
-      {tasks.length === 0 ? <p>Тасок нет</p> : <ul>{TaskMap}</ul>}
-      <div>
-        {/* <Button
-          className={filter === "all" ? s.activeFilter : ""}
-          title="All"
-          onClickButtonHandler={setAllTasksHandler}
-        />
+      {tasks.length === 0 ? <p>Тасок нет</p> : <List>{TaskMap}</List>}
+      {/* filter={filter} */}
+      <Box sx={buttonsContainerSx}>
         <Button
-          className={filter === "active" ? s.activeFilter : ""}
-          title="Active"
-          onClickButtonHandler={setActiveTasksHandler}
-        />
+          size="small"
+          variant="contained"
+          disableElevation
+          color={filter === 'all' ? 'secondary' : 'primary'}
+          onClick={setAllTasksHandler}
+        >
+          all
+        </Button>
         <Button
-          className={filter === "completed" ? s.activeFilter : ""}
-          title="Completed"
-          onClickButtonHandler={setCompletedTasksHandler}
-        /> */}
-        {/* 2 вариант  */}
-
+          size="small"
+          variant="contained"
+          disableElevation
+          color={filter === 'active' ? 'secondary' : 'primary'}
+          onClick={setActiveTasksHandler}
+        >
+          active
+        </Button>
         <Button
-          filter={filter}
-          title="all"
-          onClickButtonHandler={setAllTasksHandler}
-        />
-        <Button
-          filter={filter}
-          title="active"
-          onClickButtonHandler={setActiveTasksHandler}
-        />
-        <Button
-          filter={filter}
-          title="completed"
-          onClickButtonHandler={setCompletedTasksHandler}
-        />
-      </div>
+          size="small"
+          variant="contained"
+          disableElevation
+          color={filter === 'completed' ? 'secondary' : 'primary'}
+          onClick={setCompletedTasksHandler}
+        >
+          completed
+        </Button>
+      </Box>
       <div>{date}</div>
     </div>
   );

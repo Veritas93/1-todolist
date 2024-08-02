@@ -1,6 +1,9 @@
-import { Button } from './Button';
 import { ChangeEvent, useState, KeyboardEvent } from 'react';
 import s from './TodoList.module.css';
+import PostAddIcon from '@mui/icons-material/PostAdd';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
 
 type AddItemFormType = {
   addItem: (newTitle: string) => void;
@@ -32,17 +35,28 @@ export const AddItemForm = ({ addItem }: AddItemFormType) => {
   };
   return (
     <div>
-      <input
-        className={error ? s.error : ''}
-        value={itemTitle}
-        onChange={changeItemTitle}
-        onKeyDown={keyDownAddItemHandler}
-      />
-      <Button
-        title="+"
-        onClickButtonHandler={addItemHandler}
-        disabled={isAddItemButtonDisable || disableButton}
-      />
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <TextField
+          size="small"
+          className={error ? s.error : ''}
+          value={itemTitle}
+          onChange={changeItemTitle}
+          onKeyDown={keyDownAddItemHandler}
+          error={!!error}
+          helperText={error && 'Title is required!'}
+        />
+        <Button
+          onClick={addItemHandler}
+          variant="contained"
+          sx={{ ml: '3px' }}
+          startIcon={<PostAddIcon fontSize="small" />}
+          disabled={isAddItemButtonDisable || disableButton}
+          color="primary"
+          size="small"
+        >
+          Add
+        </Button>
+      </Box>
       {userItemTitleLengthWarning}
     </div>
   );

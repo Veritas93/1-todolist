@@ -3,6 +3,19 @@ import './App.css';
 import { Todolist } from './Todolist';
 import { v1 } from 'uuid';
 import { AddItemForm } from './AddItemForm';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import { MenuButton } from './MenuButton';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
+import { amber, green } from '@mui/material/colors';
+import Switch from '@mui/material/Switch';
 
 export type TaskType = {
   id: string;
@@ -115,28 +128,61 @@ function App() {
     if (el.filter === 'completed') {
       filterTasksForTodolist = filterTasksForTodolist.filter((t) => t.isDone);
     }
+
     return (
-      <Todolist
-        key={el.id}
-        tasksId={el.id}
-        filter={el.filter}
-        title={el.titleTodo}
-        tasks={filterTasksForTodolist}
-        date="30.01.2024"
-        removeTask={removeTask}
-        changeFilter={changeFilter}
-        addTask={addTask}
-        changeTasksStatus={changeTasksStatus}
-        removeTodolist={removeTodolist}
-        changeTasksTitle={changeTasksTitle}
-        changeTodolistTitle={changeTodolistTitle}
-      />
+      <Grid item>
+        <Paper sx={{ p: '20px 15px' }} elevation={8}>
+          <Todolist
+            key={el.id}
+            tasksId={el.id}
+            filter={el.filter}
+            title={el.titleTodo}
+            tasks={filterTasksForTodolist}
+            date="30.01.2024"
+            removeTask={removeTask}
+            changeFilter={changeFilter}
+            addTask={addTask}
+            changeTasksStatus={changeTasksStatus}
+            removeTodolist={removeTodolist}
+            changeTasksTitle={changeTasksTitle}
+            changeTodolistTitle={changeTodolistTitle}
+          />
+        </Paper>
+      </Grid>
     );
+  });
+  const [isLight, setIsLight] = useState(true);
+  const theme = createTheme({
+    palette: {
+      primary: green,
+      secondary: amber,
+      mode: isLight ? 'light' : 'dark',
+    },
   });
   return (
     <div className="App">
-      <AddItemForm addItem={addTodolist} />
-      {todolistComp}
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton color="inherit">
+              <MenuIcon />
+            </IconButton>
+            <MenuButton>Login</MenuButton>
+            <MenuButton>Logout</MenuButton>
+            <MenuButton background={theme.palette.primary.dark}>FAQ</MenuButton>
+            <Switch color="secondary" onChange={() => setIsLight(!isLight)} />
+          </Toolbar>
+        </AppBar>
+        <Container fixed>
+          <Grid container sx={{ p: '10px 0' }}>
+            <AddItemForm addItem={addTodolist} />
+          </Grid>
+          <Grid container spacing={4}>
+            {todolistComp}
+          </Grid>
+        </Container>
+      </ThemeProvider>
     </div>
   );
 }
