@@ -37,6 +37,7 @@ export const AddItemForm = ({ addItem }: AddItemFormType) => {
     <div>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <TextField
+          placeholder="Enter a title"
           size="small"
           className={error ? s.error : ''}
           value={itemTitle}

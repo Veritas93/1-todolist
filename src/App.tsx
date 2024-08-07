@@ -24,9 +24,9 @@ export type TaskType = {
 };
 
 export type FilterType = 'all' | 'active' | 'completed';
-type TodoListType = {
+export type TodoListType = {
   id: string;
-  titleTodo: string;
+  title: string;
   filter: FilterType;
 };
 
@@ -35,11 +35,13 @@ type TaskStateType = {
 };
 
 function App() {
+  //BLL
+  // Global States
   const TaskId2 = v1();
   const TaskId1 = v1();
   const [todoList, setTodoList] = useState<TodoListType[]>([
-    { id: TaskId1, titleTodo: 'What to learn', filter: 'all' },
-    { id: TaskId2, titleTodo: 'What to do', filter: 'all' },
+    { id: TaskId1, title: 'What to learn', filter: 'all' },
+    { id: TaskId2, title: 'What to do', filter: 'all' },
   ]);
 
   const [tasks, setTasks] = useState<TaskStateType>({
@@ -91,7 +93,7 @@ function App() {
     const TaskIdN = v1();
     const newTodo: TodoListType = {
       id: TaskIdN,
-      titleTodo: titleTodo,
+      title: titleTodo,
       filter: 'all',
     };
     const nextState: Array<TodoListType> = [...todoList, newTodo];
@@ -136,7 +138,7 @@ function App() {
             key={el.id}
             tasksId={el.id}
             filter={el.filter}
-            title={el.titleTodo}
+            title={el.title}
             tasks={filterTasksForTodolist}
             date="30.01.2024"
             removeTask={removeTask}
@@ -164,14 +166,18 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AppBar position="static">
-          <Toolbar>
+          <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <IconButton color="inherit">
               <MenuIcon />
             </IconButton>
-            <MenuButton>Login</MenuButton>
-            <MenuButton>Logout</MenuButton>
-            <MenuButton background={theme.palette.primary.dark}>FAQ</MenuButton>
-            <Switch color="secondary" onChange={() => setIsLight(!isLight)} />
+            <div>
+              <MenuButton>Login</MenuButton>
+              <MenuButton>Logout</MenuButton>
+              <MenuButton background={theme.palette.primary.dark}>
+                FAQ
+              </MenuButton>
+              <Switch color="secondary" onChange={() => setIsLight(!isLight)} />
+            </div>
           </Toolbar>
         </AppBar>
         <Container fixed>
