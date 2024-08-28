@@ -1,12 +1,12 @@
 import TextField from '@mui/material/TextField';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, memo, useState } from 'react';
 
 type EditableSpanPropsType = {
   title: string;
   changeTitle: (newTitle: string) => void;
 };
 
-export const EditableSpan = ({ title, changeTitle }: EditableSpanPropsType) => {
+export const EditableSpan = memo(({ title, changeTitle }: EditableSpanPropsType) => {
   const [itemTitle, setItemTitle] = useState(title);
   const changeItemTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setItemTitle(e.currentTarget.value);
@@ -29,4 +29,4 @@ export const EditableSpan = ({ title, changeTitle }: EditableSpanPropsType) => {
   ) : (
     <span onDoubleClick={onEditMode}>{title}</span>
   );
-};
+});

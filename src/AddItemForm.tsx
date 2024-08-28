@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, KeyboardEvent } from 'react';
+import { ChangeEvent, useState, KeyboardEvent, memo } from 'react';
 import s from './TodoList.module.css';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import Button from '@mui/material/Button';
@@ -9,7 +9,8 @@ type AddItemFormType = {
   addItem: (newTitle: string) => void;
 };
 
-export const AddItemForm = ({ addItem }: AddItemFormType) => {
+export const AddItemForm = memo (({ addItem }: AddItemFormType) => {
+  
   const [itemTitle, setItemTitle] = useState('');
   const [error, setError] = useState<string | null>(null);
   const disableButton = itemTitle.length > 15;
@@ -61,4 +62,4 @@ export const AddItemForm = ({ addItem }: AddItemFormType) => {
       {userItemTitleLengthWarning}
     </div>
   );
-};
+});

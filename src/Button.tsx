@@ -1,27 +1,27 @@
-import { FilterType } from "./App";
-import s from "./TodoList.module.css";
+import { memo, useCallback } from 'react';
+import { FilterType } from './App';
+import s from './TodoList.module.css';
+import Button from '@mui/material/Button';
+import { useDispatch } from 'react-redux';
+import { ChangeTodolistFilterAC } from './reducers/todolist-reducer';
 
 type ButtonPropsType = {
-  title: string;
-  onClickButtonHandler?: () => void;
-  disabled?: boolean;
-  className?: string;
-  filter?: FilterType;
+  title: string
+  color: "primary" | "secondary" ;
+  onClick: ()=> void
 };
 
-export const Button = ({
-  title,
-  onClickButtonHandler,
-  disabled,
-  filter,
-}: ButtonPropsType) => {
+export const ButtonWrapper = memo(({ color, title, onClick }: ButtonPropsType) => {
+  console.log('button');
   return (
-    <button
-      disabled={disabled}
-      className={filter === title ? s.activeFilter : ""}
-      onClick={onClickButtonHandler}
-    >
-      {title}
-    </button>
+      <Button
+        size="small"
+        variant="contained"
+        disableElevation
+        color={color}
+        onClick={onClick}
+      >
+        {title}
+      </Button>
   );
-};
+});

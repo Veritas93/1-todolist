@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Reducer, useReducer, useState } from 'react';
 import './App.css';
 import { Todolist } from './Todolist';
 import { v1 } from 'uuid';
@@ -15,6 +15,20 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { amber, green } from '@mui/material/colors';
 import Switch from '@mui/material/Switch';
+import {
+  AddTodolistActionCreator,
+  ChangeTodolistFilterAC,
+  ChangeTodolistTitleAC,
+  RemoveTodolistAC,
+  todolistsReducer,
+} from './reducers/todolist-reducer';
+import {
+  addTaskAC,
+  changeTaskStatusAC,
+  changeTaskTitleAC,
+  removeTaskAC,
+  tasksReducer,
+} from './reducers/tasks-reducer';
 
 export type TaskType = {
   id: string;
@@ -33,17 +47,17 @@ export type TaskStateType = {
   [taskId: string]: TaskType[];
 };
 
-function App() {
+function AppWithReducers() {
   //BLL
   // Global States
   const TaskId2 = v1();
   const TaskId1 = v1();
-  const [todoList, setTodoList] = useState<TodoListType[]>([
+  const [todoList, dispatchToTodoList] = useReducer(todolistsReducer, [
     { id: TaskId1, title: 'What to learn', filter: 'all' },
     { id: TaskId2, title: 'What to do', filter: 'all' },
   ]);
 
-  const [tasks, setTasks] = useState<TaskStateType>({
+  const [tasks, dispatchToTasks] = useReducer(tasksReducer, {
     [TaskId1]: [
       { id: v1(), title: 'HTML&CSS', isDone: true },
       { id: v1(), title: 'JS', isDone: true },
@@ -61,64 +75,46 @@ function App() {
 
   // Task CRUD
   const addTask = (taskID: string, title: string) => {
-    const newTask: TaskType = { id: v1(), title: title, isDone: false };
-    setTasks({ ...tasks, [taskID]: [newTask, ...tasks[taskID]] });
+    const action = addTaskAC(title, taskID);
+    dispatchToTasks(action);
   };
 
   const changeTasksStatus = (taskID: string, id: string, isDone: boolean) => {
-    setTasks({
-      ...tasks,
-      [taskID]: tasks[taskID].map((el) =>
-        el.id === id ? { ...el, isDone: isDone } : el
-      ),
-    });
+    const action = changeTaskStatusAC(taskID, isDone, id);
+    dispatchToTasks(action);
   };
 
   const changeTasksTitle = (taskID: string, id: string, title: string) => {
-    setTasks({
-      ...tasks,
-      [taskID]: tasks[taskID].map((el) =>
-        el.id === id ? { ...el, title: title } : el
-      ),
-    });
+    const action = changeTaskTitleAC(id, title, taskID);
+    dispatchToTasks(action);
   };
 
   const removeTask = (taskID: string, id: string) => {
-    setTasks({ ...tasks, [taskID]: tasks[taskID].filter((t) => t.id !== id) });
+    const action = removeTaskAC(id, taskID);
+    dispatchToTasks(action);
   };
 
   // Todolist CRUD
   const addTodolist = (titleTodo: string) => {
-    const TaskIdN = v1();
-    const newTodo: TodoListType = {
-      id: TaskIdN,
-      title: titleTodo,
-      filter: 'all',
-    };
-    const nextState: Array<TodoListType> = [...todoList, newTodo];
-    setTodoList(nextState);
-    setTasks({ ...tasks, [TaskIdN]: [] });
+    const action = AddTodolistActionCreator(titleTodo);
+    dispatchToTodoList(action);
+    dispatchToTasks(action);
   };
 
   const changeFilter = (tasksId: string, NewFilterValue: FilterType) => {
-    setTodoList(
-      todoList.map((el) =>
-        el.id === tasksId ? { ...el, filter: NewFilterValue } : el
-      )
-    );
+    const action = ChangeTodolistFilterAC(tasksId, NewFilterValue);
+    dispatchToTodoList(action);
   };
 
   const changeTodolistTitle = (tasksId: string, NewTitleValue: string) => {
-    setTodoList(
-      todoList.map((el) =>
-        el.id === tasksId ? { ...el, titleTodo: NewTitleValue } : el
-      )
-    );
+    const action = ChangeTodolistTitleAC(tasksId, NewTitleValue);
+    dispatchToTodoList(action);
   };
 
   const removeTodolist = (taskID: string) => {
-    setTodoList(todoList.filter((el) => el.id !== taskID));
-    delete tasks[taskID];
+    const action = RemoveTodolistAC(taskID);
+    dispatchToTodoList(action);
+    dispatchToTasks(action);
   };
   //UI
   const todolistComp: Array<JSX.Element> = todoList.map((el) => {
@@ -192,4 +188,4 @@ function App() {
   );
 }
 
-export default App;
+export default AppWithReducers;
