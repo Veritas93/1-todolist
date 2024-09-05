@@ -1,22 +1,22 @@
 import { TaskStateType, TaskType, TodoListType } from './App';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { TaskItem } from './TaskItem';
-import { AddItemForm } from './AddItemForm';
-import { EditableSpan } from './EditableSpan';
+import { TaskItem } from './tasks/TaskItem';
+import { AddItemForm } from './addItemForm/AddItemForm';
+import { EditableSpan } from './editableSpan/EditableSpan';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
 import { buttonsContainerSx } from './Todolist.Styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppRootStateType } from './reducers/store';
-import { addTaskAC } from './reducers/tasks-reducer';
+import { AppRootStateType } from './state/store';
+import { addTaskAC } from './state/tasks-reducer';
 import {
   ChangeTodolistFilterAC,
   ChangeTodolistTitleAC,
   RemoveTodolistAC,
-} from './reducers/todolist-reducer';
-import { TaskItemWithRedux } from './TaskItemWithRedux';
+} from './state/todolist-reducer';
+import { TaskItemWithRedux } from './tasks/TaskItemWithRedux';
 import { memo, useCallback, useMemo } from 'react';
 import { ButtonWrapper } from './Button';
 
@@ -80,8 +80,8 @@ export const TodolistWithRedux = memo(({ todolist }: TodolistPropsType) => {
     if (filter === 'completed') {
       tasks = tasks.filter((t) => t.isDone);
     }
-    return tasks
-  },[tasks, filter]);
+    return tasks;
+  }, [tasks, filter]);
 
   return (
     <div>

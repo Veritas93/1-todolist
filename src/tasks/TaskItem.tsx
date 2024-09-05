@@ -1,42 +1,40 @@
-import { ChangeEvent, useCallback } from 'react';
-import { EditableSpan } from './EditableSpan';
+import { ChangeEvent } from 'react';
+import { EditableSpan } from '../editableSpan/EditableSpan';
 import IconButton from '@mui/material/IconButton';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import Checkbox from '@mui/material/Checkbox';
 import ListItem from '@mui/material/ListItem';
-import { getListItemSx } from './Todolist.Styles';
-import { useDispatch } from 'react-redux';
-import {
-  changeTaskStatusAC,
-  changeTaskTitleAC,
-  removeTaskAC,
-} from './reducers/tasks-reducer';
+import { getListItemSx } from '../Todolist.Styles';
 
 type TaskItemType = {
   tasksId: string;
   id: string;
   isDone: boolean;
   title: string;
+  removeTask: (taskID: string, id: string) => void;
+  changeTasksStatus: (taskID: string, id: string, isDone: boolean) => void;
+  changeTasksTitle: (taskID: string, id: string, title: string) => void;
 };
 
-export const TaskItemWithRedux = ({
+export const TaskItem = ({
   tasksId,
   id,
   isDone,
   title,
+  removeTask,
+  changeTasksStatus,
+  changeTasksTitle,
 }: TaskItemType) => {
-  console.log('Task')
-  const dispatch = useDispatch();
-  const changeTasksStatusHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    dispatch(changeTaskStatusAC(id, e.currentTarget.checked, tasksId));
-  },[dispatch]);
-  const removeTaskHandler = useCallback(() => {
-    dispatch(removeTaskAC(id, tasksId));
-  },[dispatch]);
+  const changeTasksStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    changeTasksStatus(tasksId, id, e.currentTarget.checked);
+  };
+  const removeTaskHandler = () => {
+    removeTask(tasksId, id);
+  };
 
-  const changeTasksTitleCallback = useCallback((newTitle: string) => {
-    dispatch(changeTaskTitleAC(id, newTitle, tasksId));
-  },[dispatch]);
+  const changeTasksTitleCallback = (newTitle: string) => {
+    changeTasksTitle(tasksId, id, newTitle);
+  };
   return (
     <ListItem disablePadding key={id} sx={getListItemSx(isDone)}>
       <div>

@@ -3,17 +3,18 @@ import { FilterType } from './App';
 import s from './TodoList.module.css';
 import Button from '@mui/material/Button';
 import { useDispatch } from 'react-redux';
-import { ChangeTodolistFilterAC } from './reducers/todolist-reducer';
+import { ChangeTodolistFilterAC } from './state/todolist-reducer';
 
 type ButtonPropsType = {
-  title: string
-  color: "primary" | "secondary" ;
-  onClick: ()=> void
+  title: string;
+  color: 'primary' | 'secondary';
+  onClick: () => void;
 };
 
-export const ButtonWrapper = memo(({ color, title, onClick }: ButtonPropsType) => {
-  console.log('button');
-  return (
+export const ButtonWrapper = memo(
+  ({ color, title, onClick }: ButtonPropsType) => {
+    console.log('button');
+    return (
       <Button
         size="small"
         variant="contained"
@@ -23,5 +24,6 @@ export const ButtonWrapper = memo(({ color, title, onClick }: ButtonPropsType) =
       >
         {title}
       </Button>
-  );
-});
+    );
+  }
+);

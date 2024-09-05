@@ -1,11 +1,11 @@
 import { ChangeEvent, useState, KeyboardEvent, memo } from 'react';
-import s from './TodoList.module.css';
+import s from './../TodoList.module.css';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 
-type AddItemFormType = {
+export type AddItemFormType = {
   addItem: (newTitle: string) => void;
 };
 

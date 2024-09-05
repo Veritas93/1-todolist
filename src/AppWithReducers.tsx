@@ -2,7 +2,7 @@ import { Reducer, useReducer, useState } from 'react';
 import './App.css';
 import { Todolist } from './Todolist';
 import { v1 } from 'uuid';
-import { AddItemForm } from './AddItemForm';
+import { AddItemForm } from './addItemForm/AddItemForm';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -21,14 +21,14 @@ import {
   ChangeTodolistTitleAC,
   RemoveTodolistAC,
   todolistsReducer,
-} from './reducers/todolist-reducer';
+} from './state/todolist-reducer';
 import {
   addTaskAC,
   changeTaskStatusAC,
   changeTaskTitleAC,
   removeTaskAC,
   tasksReducer,
-} from './reducers/tasks-reducer';
+} from './state/tasks-reducer';
 
 export type TaskType = {
   id: string;

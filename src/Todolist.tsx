@@ -1,8 +1,8 @@
 import { FilterType, TaskType } from './App';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { TaskItem } from './TaskItem';
-import { AddItemForm } from './AddItemForm';
-import { EditableSpan } from './EditableSpan';
+import { TaskItem } from './tasks/TaskItem';
+import { AddItemForm } from './addItemForm/AddItemForm';
+import { EditableSpan } from './editableSpan/EditableSpan';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
