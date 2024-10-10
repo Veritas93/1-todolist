@@ -1,13 +1,18 @@
-import { FilterType, TaskType } from './App';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { TaskItem } from './tasks/TaskItem';
-import { AddItemForm } from './addItemForm/AddItemForm';
-import { EditableSpan } from './editableSpan/EditableSpan';
+import { TaskItem } from '../../tasks/TaskItem';
+import { AddItemForm } from '../../components/addItemForm/AddItemForm';
+import { EditableSpan } from '../../components/editableSpan/EditableSpan';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
 import { buttonsContainerSx } from './Todolist.Styles';
+import { FilterType } from '../../state/todolist/todolist-reducer';
+import {
+  TaskPriorities,
+  TaskStatuses,
+  TaskType,
+} from '../../state/task/tasks-reducer';
 
 export type TodolistPropsType = {
   tasksId: string;
@@ -18,8 +23,8 @@ export type TodolistPropsType = {
 
   removeTask: (taskID: string, id: string) => void;
   changeFilter: (tasksId: string, NewFilterValue: FilterType) => void;
-  addTask: (taskID: string, title: string) => void;
-  changeTasksStatus: (taskID: string, id: string, isDone: boolean) => void;
+  addTask: (task: TaskType) => void;
+  changeTasksStatus: (taskID: string, id: string, status: TaskStatuses) => void;
   removeTodolist: (taskID: string) => void;
   changeTasksTitle: (taskID: string, id: string, title: string) => void;
   changeTodolistTitle: (taskID: string, title: string) => void;
@@ -44,7 +49,7 @@ export const Todolist = ({
       <TaskItem
         tasksId={tasksId}
         id={task.id}
-        isDone={task.isDone}
+        isDone={task.status}
         title={task.title}
         removeTask={removeTask}
         changeTasksStatus={changeTasksStatus}
@@ -54,7 +59,19 @@ export const Todolist = ({
   });
 
   const addItemCallback = (taskTitle: string) => {
-    addTask(tasksId, taskTitle);
+    addTask({
+      description: '',
+      title: taskTitle,
+      completed: false,
+      status: TaskStatuses.New,
+      priority: TaskPriorities.Low,
+      startDate: '',
+      deadline: '',
+      id: '',
+      todoListId: '',
+      order: 0,
+      addedDate: '',
+    });
   };
 
   const changeTodolistTitleCallback = (newTitle: string) => {

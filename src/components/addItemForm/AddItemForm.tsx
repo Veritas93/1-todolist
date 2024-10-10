@@ -1,39 +1,29 @@
-import { ChangeEvent, useState, KeyboardEvent, memo } from 'react';
-import s from './../TodoList.module.css';
+import {memo } from 'react';
+import s from './../../features/Todolist/TodoList.module.css';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
+import { useAddItemForm } from './hooks/useAddItemForm';
 
 export type AddItemFormType = {
   addItem: (newTitle: string) => void;
+  disabled?: boolean
 };
 
-export const AddItemForm = memo (({ addItem }: AddItemFormType) => {
-  
-  const [itemTitle, setItemTitle] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const disableButton = itemTitle.length > 15;
+export const AddItemForm = memo(({ addItem, disabled }: AddItemFormType) => {
+  const {
+    disableButton,
+    error,
+    changeItemTitle,
+    keyDownAddItemHandler,
+    isAddItemButtonDisable,
+    itemTitle,
+    addItemHandler,
+  } = useAddItemForm(addItem);
   const userItemTitleLengthWarning = disableButton && (
     <div className={s.error}>Your Item title is too long</div>
   );
-
-  const isAddItemButtonDisable = !itemTitle.trim();
-
-  const changeItemTitle = (e: ChangeEvent<HTMLInputElement>) => {
-    setError(null);
-    setItemTitle(e.currentTarget.value);
-  };
-  const keyDownAddItemHandler = (e: KeyboardEvent<HTMLInputElement>) =>
-    e.key === 'Enter' && addItemHandler();
-  const addItemHandler = () => {
-    if (itemTitle.trim()) {
-      addItem(itemTitle.trim());
-      setItemTitle('');
-    } else {
-      setError('Title is required!');
-    }
-  };
   return (
     <div>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -46,13 +36,14 @@ export const AddItemForm = memo (({ addItem }: AddItemFormType) => {
           onKeyDown={keyDownAddItemHandler}
           error={!!error}
           helperText={error && 'Title is required!'}
+          disabled={disabled}
         />
         <Button
           onClick={addItemHandler}
           variant="contained"
           sx={{ ml: '3px' }}
           startIcon={<PostAddIcon fontSize="small" />}
-          disabled={isAddItemButtonDisable || disableButton}
+          disabled={isAddItemButtonDisable || disableButton || disabled}
           color="primary"
           size="small"
         >

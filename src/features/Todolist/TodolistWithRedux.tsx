@@ -1,27 +1,30 @@
-import { TaskStateType, TaskType, TodoListType } from './App';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { TaskItem } from './tasks/TaskItem';
-import { AddItemForm } from './addItemForm/AddItemForm';
-import { EditableSpan } from './editableSpan/EditableSpan';
-import Button from '@mui/material/Button';
+import { AddItemForm } from '../../components/addItemForm/AddItemForm';
+import { EditableSpan } from '../../components/editableSpan/EditableSpan';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
 import { buttonsContainerSx } from './Todolist.Styles';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppRootStateType } from './state/store';
-import { addTaskAC } from './state/tasks-reducer';
+import { useSelector } from 'react-redux';
+import { AppRootStateType, useAppDispatch } from '../../state/store';
+import {
+  TaskStatuses,
+  TaskType,
+  createTaskTC,
+  getTasksTC,
+} from '../../state/task/tasks-reducer';
 import {
   ChangeTodolistFilterAC,
-  ChangeTodolistTitleAC,
-  RemoveTodolistAC,
-} from './state/todolist-reducer';
-import { TaskItemWithRedux } from './tasks/TaskItemWithRedux';
-import { memo, useCallback, useMemo } from 'react';
-import { ButtonWrapper } from './Button';
+  TodolistDomainType,
+  changeTodolistTitleTC,
+  removeTodosTC,
+} from '../../state/todolist/todolist-reducer';
+import { TaskItemWithRedux } from '../../tasks/TaskItemWithRedux';
+import { memo, useCallback, useMemo, useEffect } from 'react';
+import { ButtonWrapper } from '../../Button';
 
 export type TodolistPropsType = {
-  todolist: TodoListType;
+  todolist: TodolistDomainType;
 };
 
 export const TodolistWithRedux = memo(({ todolist }: TodolistPropsType) => {
@@ -32,30 +35,19 @@ export const TodolistWithRedux = memo(({ todolist }: TodolistPropsType) => {
     (state) => state.tasks[id]
   );
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const TaskMap = tasks.map((task) => {
-    return (
-      <TaskItemWithRedux
-        key={task.id}
-        tasksId={id}
-        id={task.id}
-        isDone={task.isDone}
-        title={task.title}
-      />
-    );
-  });
+  useEffect(() => {
+    dispatch(getTasksTC(id));
+  }, []);
 
-  const addItemCallback = useCallback(
-    (taskTitle: string) => {
-      dispatch(addTaskAC(taskTitle, id));
-    },
-    [id]
-  );
+  const addItemCallback = useCallback((taskTitle: string) => {
+    dispatch(createTaskTC(id, taskTitle));
+  }, []);
 
   const changeTodolistTitleCallback = useCallback(
     (newTitle: string) => {
-      dispatch(ChangeTodolistTitleAC(id, newTitle));
+      dispatch(changeTodolistTitleTC(id, newTitle));
     },
     [dispatch]
   );
@@ -72,29 +64,49 @@ export const TodolistWithRedux = memo(({ todolist }: TodolistPropsType) => {
     dispatch(ChangeTodolistFilterAC(id, 'completed'));
   }, [dispatch]);
 
+  const removeTodolistHandler = useCallback(() => {
+    dispatch(removeTodosTC(id));
+  }, [dispatch]);
+
   tasks = useMemo(() => {
     console.log('useMemo');
     if (filter === 'active') {
-      tasks = tasks.filter((t) => !t.isDone);
+      tasks = tasks.filter((t) => t.status === TaskStatuses.New);
     }
     if (filter === 'completed') {
-      tasks = tasks.filter((t) => t.isDone);
+      tasks = tasks.filter((t) => t.status === TaskStatuses.Completed);
     }
     return tasks;
   }, [tasks, filter]);
+
+  const TaskMap = tasks.map((task) => {
+    return (
+      <TaskItemWithRedux
+        key={task.id}
+        tasksId={id}
+        id={task.id}
+        isDone={task.status}
+        title={task.title}
+      />
+    );
+  });
 
   return (
     <div>
       <h3>
         <EditableSpan title={title} changeTitle={changeTodolistTitleCallback} />
         <IconButton
-          onClick={() => dispatch(RemoveTodolistAC(id))}
+          onClick={removeTodolistHandler}
           color="primary"
+          disabled={todolist.entityStatus === 'loading'}
         >
           <DeleteOutlineIcon fontSize="small" />
         </IconButton>
       </h3>
-      <AddItemForm addItem={addItemCallback} />
+      <AddItemForm
+        addItem={addItemCallback}
+        disabled={todolist.entityStatus === 'loading'}
+      />
       {tasks.length === 0 ? <p>Тасок нет</p> : <List>{TaskMap}</List>}
       <Box sx={buttonsContainerSx}>
         <ButtonWrapper

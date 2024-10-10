@@ -1,13 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
-import { useState } from 'react';
-import { action } from '@storybook/addon-actions';
 import { TaskItemWithRedux } from './TaskItemWithRedux';
 import { ReduxStoreProviderDecorator } from '../state/ReduxStoreProviderDecorator';
 import { useSelector } from 'react-redux';
 import { AppRootStateType } from '../state/store';
-import { TaskType } from '../App';
 import { v1 } from 'uuid';
+import {
+  TaskPriorities,
+  TaskStatuses,
+  TaskType,
+} from '../state/task/tasks-reducer';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta: Meta<typeof TaskItemWithRedux> = {
@@ -43,12 +44,25 @@ const TaskItem = () => {
   let task = useSelector<AppRootStateType, TaskType>(
     (state) => state.tasks['todolistId1'][0]
   );
-  if (!task) task = {id: v1(), title: "DEFAULT TASK", isDone: false}
+  if (!task)
+    task = {
+      id: v1(),
+      title: 'DEFAULT TASK',
+      status: TaskStatuses.Completed,
+      description: '',
+      completed: false,
+      priority: TaskPriorities.Low,
+      startDate: '',
+      deadline: '',
+      todoListId: 'todolistId1',
+      order: 0,
+      addedDate: '',
+    };
   return (
     <TaskItemWithRedux
       tasksId={'todolistId1'}
       id={task.id}
-      isDone={task.isDone}
+      isDone={task.status}
       title={task.title}
     />
   );

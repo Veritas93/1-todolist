@@ -1,9 +1,6 @@
-import { memo, useCallback } from 'react';
-import { FilterType } from './App';
+import { memo } from 'react';
 import s from './TodoList.module.css';
 import Button from '@mui/material/Button';
-import { useDispatch } from 'react-redux';
-import { ChangeTodolistFilterAC } from './state/todolist-reducer';
 
 type ButtonPropsType = {
   title: string;

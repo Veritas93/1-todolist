@@ -1,21 +1,21 @@
 import { ChangeEvent, useCallback } from 'react';
-import { EditableSpan } from '../editableSpan/EditableSpan';
+import { EditableSpan } from '../components/editableSpan/EditableSpan';
 import IconButton from '@mui/material/IconButton';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import Checkbox from '@mui/material/Checkbox';
 import ListItem from '@mui/material/ListItem';
-import { getListItemSx } from '../Todolist.Styles';
-import { useDispatch } from 'react-redux';
+import { getListItemSx } from '../features/Todolist/Todolist.Styles';
 import {
-  changeTaskStatusAC,
-  changeTaskTitleAC,
-  removeTaskAC,
-} from '../state/tasks-reducer';
+  TaskStatuses,
+  deleteTaskTC,
+  updateTaskTC,
+} from '../state/task/tasks-reducer';
+import { useAppDispatch } from '../state/store';
 
 type TaskItemType = {
   tasksId: string;
   id: string;
-  isDone: boolean;
+  isDone: TaskStatuses;
   title: string;
 };
 
@@ -26,30 +26,43 @@ export const TaskItemWithRedux = ({
   title,
 }: TaskItemType) => {
   console.log('Task');
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const changeTasksStatusHandler = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      dispatch(changeTaskStatusAC(id, e.currentTarget.checked, tasksId));
+      let newIsDoneValue = e.currentTarget.checked;
+      dispatch(
+        updateTaskTC(
+          tasksId,
+          {
+            status: newIsDoneValue ? TaskStatuses.Completed : TaskStatuses.New,
+          },
+          id
+        )
+      );
     },
     [dispatch]
   );
   const removeTaskHandler = useCallback(() => {
-    dispatch(removeTaskAC(id, tasksId));
+    dispatch(deleteTaskTC(tasksId, id));
   }, [dispatch]);
 
   const changeTasksTitleCallback = useCallback(
     (newTitle: string) => {
-      dispatch(changeTaskTitleAC(id, newTitle, tasksId));
+      dispatch(updateTaskTC(tasksId, { title: newTitle }, id));
     },
     [dispatch]
   );
   return (
-    <ListItem disablePadding key={id} sx={getListItemSx(isDone)}>
+    <ListItem
+      disablePadding
+      key={id}
+      sx={getListItemSx(isDone === TaskStatuses.Completed)}
+    >
       <div>
         <Checkbox
           size="small"
           color="secondary"
-          checked={isDone}
+          checked={isDone === TaskStatuses.Completed}
           onChange={changeTasksStatusHandler}
         />
         <EditableSpan title={title} changeTitle={changeTasksTitleCallback} />

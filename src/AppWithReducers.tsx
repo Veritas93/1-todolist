@@ -1,8 +1,7 @@
-import { Reducer, useReducer, useState } from 'react';
-import './App.css';
-import { Todolist } from './Todolist';
+import { useReducer, useState } from 'react';
+import { Todolist } from './features/Todolist/Todolist';
 import { v1 } from 'uuid';
-import { AddItemForm } from './addItemForm/AddItemForm';
+import { AddItemForm } from './components/addItemForm/AddItemForm';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -16,32 +15,22 @@ import { CssBaseline } from '@mui/material';
 import { amber, green } from '@mui/material/colors';
 import Switch from '@mui/material/Switch';
 import {
-  AddTodolistActionCreator,
+  AddTodolistAC,
   ChangeTodolistFilterAC,
   ChangeTodolistTitleAC,
+  FilterType,
   RemoveTodolistAC,
   todolistsReducer,
-} from './state/todolist-reducer';
+} from './state/todolist/todolist-reducer';
 import {
-  addTaskAC,
-  changeTaskStatusAC,
-  changeTaskTitleAC,
+  TaskPriorities,
+  TaskStatuses,
+  TaskType,
+  createTaskAC,
   removeTaskAC,
   tasksReducer,
-} from './state/tasks-reducer';
-
-export type TaskType = {
-  id: string;
-  title: string;
-  isDone: boolean;
-};
-
-export type FilterType = 'all' | 'active' | 'completed';
-export type TodoListType = {
-  id: string;
-  title: string;
-  filter: FilterType;
-};
+  updateTaskAC,
+} from './state/task/tasks-reducer';
 
 export type TaskStateType = {
   [taskId: string]: TaskType[];
@@ -53,39 +42,100 @@ function AppWithReducers() {
   const TaskId2 = v1();
   const TaskId1 = v1();
   const [todoList, dispatchToTodoList] = useReducer(todolistsReducer, [
-    { id: TaskId1, title: 'What to learn', filter: 'all' },
-    { id: TaskId2, title: 'What to do', filter: 'all' },
+    {
+      id: TaskId1,
+      title: 'What to learn',
+      filter: 'all',
+      entityStatus: 'idle',
+      addedDate: '',
+      order: 0,
+    },
+    {
+      id: TaskId2,
+      title: 'What to do',
+      filter: 'all',
+      entityStatus: 'idle',
+      addedDate: '',
+      order: 0,
+    },
   ]);
 
   const [tasks, dispatchToTasks] = useReducer(tasksReducer, {
     [TaskId1]: [
-      { id: v1(), title: 'HTML&CSS', isDone: true },
-      { id: v1(), title: 'JS', isDone: true },
-      { id: v1(), title: 'ReactJS', isDone: false },
-      { id: v1(), title: 'Redux', isDone: false },
-      { id: v1(), title: 'Typescript', isDone: false },
-      { id: v1(), title: 'RTK query', isDone: false },
+      {
+        id: v1(),
+        title: 'HTML&CSS',
+        status: TaskStatuses.Completed,
+        description: '',
+        completed: false,
+        priority: TaskPriorities.Low,
+        startDate: '',
+        deadline: '',
+        todoListId: TaskId1,
+        order: 0,
+        addedDate: '',
+      },
+      {
+        id: v1(),
+        title: 'JS',
+        status: TaskStatuses.Completed,
+        description: '',
+        completed: false,
+        priority: TaskPriorities.Low,
+        startDate: '',
+        deadline: '',
+        todoListId: TaskId1,
+        order: 0,
+        addedDate: '',
+      },
     ],
     [TaskId2]: [
-      { id: v1(), title: 'HW', isDone: true },
-      { id: v1(), title: 'Exam', isDone: true },
-      { id: v1(), title: 'Audio', isDone: false },
+      {
+        id: v1(),
+        title: 'HW',
+        status: TaskStatuses.Completed,
+        description: '',
+        completed: false,
+        priority: TaskPriorities.Low,
+        startDate: '',
+        deadline: '',
+        todoListId: TaskId2,
+        order: 0,
+        addedDate: '',
+      },
+      {
+        id: v1(),
+        title: 'Exam',
+        status: TaskStatuses.Completed,
+        description: '',
+        completed: false,
+        priority: TaskPriorities.Low,
+        startDate: '',
+        deadline: '',
+        todoListId: TaskId2,
+        order: 0,
+        addedDate: '',
+      },
     ],
   });
 
   // Task CRUD
-  const addTask = (taskID: string, title: string) => {
-    const action = addTaskAC(title, taskID);
+  const addTask = (task: TaskType) => {
+    const action = createTaskAC(task);
     dispatchToTasks(action);
   };
 
-  const changeTasksStatus = (taskID: string, id: string, isDone: boolean) => {
-    const action = changeTaskStatusAC(taskID, isDone, id);
+  const changeTasksStatus = (
+    taskID: string,
+    id: string,
+    status: TaskStatuses
+  ) => {
+    const action = updateTaskAC(taskID, { status }, id);
     dispatchToTasks(action);
   };
 
   const changeTasksTitle = (taskID: string, id: string, title: string) => {
-    const action = changeTaskTitleAC(id, title, taskID);
+    const action = updateTaskAC(id, { title }, taskID);
     dispatchToTasks(action);
   };
 
@@ -96,7 +146,12 @@ function AppWithReducers() {
 
   // Todolist CRUD
   const addTodolist = (titleTodo: string) => {
-    const action = AddTodolistActionCreator(titleTodo);
+    const action = AddTodolistAC({
+      id: v1(),
+      addedDate: '',
+      order: 0,
+      title: titleTodo,
+    });
     dispatchToTodoList(action);
     dispatchToTasks(action);
   };
@@ -120,10 +175,14 @@ function AppWithReducers() {
   const todolistComp: Array<JSX.Element> = todoList.map((el) => {
     let filterTasksForTodolist: TaskType[] = tasks[el.id];
     if (el.filter === 'active') {
-      filterTasksForTodolist = filterTasksForTodolist.filter((t) => !t.isDone);
+      filterTasksForTodolist = filterTasksForTodolist.filter(
+        (t) => t.status === TaskStatuses.New
+      );
     }
     if (el.filter === 'completed') {
-      filterTasksForTodolist = filterTasksForTodolist.filter((t) => t.isDone);
+      filterTasksForTodolist = filterTasksForTodolist.filter(
+        (t) => t.status === TaskStatuses.Completed
+      );
     }
 
     return (
@@ -157,7 +216,7 @@ function AppWithReducers() {
     },
   });
   return (
-    <div className="App">
+    <div>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AppBar position="static">

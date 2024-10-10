@@ -2,7 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 import { TaskItem } from './TaskItem';
 import { useState } from 'react';
-import { action } from '@storybook/addon-actions'
+import { action } from '@storybook/addon-actions';
+import { TaskStatuses } from '../state/task/tasks-reducer';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta: Meta<typeof TaskItem> = {
@@ -23,11 +24,11 @@ const meta: Meta<typeof TaskItem> = {
   args: {
     tasksId: 'vsdvser23232sczcxq',
     id: '21e12ecsdvsxvsfb',
-    isDone: true,
+    isDone: TaskStatuses.Completed,
     title: 'CSS',
     removeTask: fn(),
-    changeTasksStatus: fn(),
-    changeTasksTitle: fn(),
+    // changeTasksStatus: fn(),
+    // changeTasksTitle: fn(),
   },
   // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   // args: { addItem: fn() },
@@ -40,7 +41,7 @@ type Story = StoryObj<typeof TaskItem>;
 export const TaskIsNotDoneStory: Story = {
   args: {
     id: '21e12ecsdvsxvsfb',
-    isDone: false,
+    isDone: TaskStatuses.New,
     title: 'JS',
   },
 };
@@ -50,11 +51,11 @@ export const TaskIsDoneStory: Story = {};
 const ToggleTask = () => {
   const [task, setTask] = useState({
     id: '21e12ecsdvsxvsfb',
-    isDone: false,
+    isDone: TaskStatuses.New,
     title: 'JS',
   });
   const changeTasksStatus = () => {
-    setTask({ ...task, isDone: !task.isDone });
+    setTask({ ...task, isDone: TaskStatuses.Completed });
   };
 
   const changeTasksTitle = (taskID: string, id: string, title: string) => {
@@ -66,13 +67,13 @@ const ToggleTask = () => {
       id={task.id}
       isDone={task.isDone}
       title={task.title}
-      removeTask={action( 'removeTask')}
+      removeTask={action('removeTask')}
       changeTasksStatus={changeTasksStatus}
       changeTasksTitle={changeTasksTitle}
     />
   );
 };
 export const ToggleTaskStory: Story = {
-  render: () => <ToggleTask/>
-}
+  render: () => <ToggleTask />,
+};
 // export const AddItemFormErrorsStories: Story = {render: (args) => <AddItemFormError addItem={args.addItem}/>}
