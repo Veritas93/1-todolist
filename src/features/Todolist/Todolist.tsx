@@ -1,34 +1,30 @@
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { TaskItem } from '../../tasks/TaskItem';
-import { AddItemForm } from '../../components/addItemForm/AddItemForm';
-import { EditableSpan } from '../../components/editableSpan/EditableSpan';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import Box from '@mui/material/Box';
-import { buttonsContainerSx } from './Todolist.Styles';
-import { FilterType } from '../../state/todolist/todolist-reducer';
-import {
-  TaskPriorities,
-  TaskStatuses,
-  TaskType,
-} from '../../state/task/tasks-reducer';
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
+import { TaskItem } from "../../tasks/TaskItem"
+import { AddItemForm } from "../../components/addItemForm/AddItemForm"
+import { EditableSpan } from "../../components/editableSpan/EditableSpan"
+import Button from "@mui/material/Button"
+import IconButton from "@mui/material/IconButton"
+import List from "@mui/material/List"
+import Box from "@mui/material/Box"
+import { buttonsContainerSx } from "./Todolist.Styles"
+import { FilterType } from "../../state/todolist/todolistSlice"
+import { TaskPriorities, TaskStatuses, TaskType } from "../../state/task/tasksSlice"
 
 export type TodolistPropsType = {
-  tasksId: string;
-  filter: FilterType;
-  title: string;
-  tasks: TaskType[];
-  date?: string;
+  tasksId: string
+  filter: FilterType
+  title: string
+  tasks: TaskType[]
+  date?: string
 
-  removeTask: (taskID: string, id: string) => void;
-  changeFilter: (tasksId: string, NewFilterValue: FilterType) => void;
-  addTask: (task: TaskType) => void;
-  changeTasksStatus: (taskID: string, id: string, status: TaskStatuses) => void;
-  removeTodolist: (taskID: string) => void;
-  changeTasksTitle: (taskID: string, id: string, title: string) => void;
-  changeTodolistTitle: (taskID: string, title: string) => void;
-};
+  removeTask: (taskID: string, id: string) => void
+  changeFilter: (tasksId: string, NewFilterValue: FilterType) => void
+  addTask: (task: TaskType) => void
+  changeTasksStatus: (taskID: string, id: string, status: TaskStatuses) => void
+  removeTodolist: (taskID: string) => void
+  changeTasksTitle: (taskID: string, id: string, title: string) => void
+  changeTodolistTitle: (taskID: string, title: string) => void
+}
 
 export const Todolist = ({
   filter,
@@ -55,40 +51,40 @@ export const Todolist = ({
         changeTasksStatus={changeTasksStatus}
         changeTasksTitle={changeTasksTitle}
       />
-    );
-  });
+    )
+  })
 
   const addItemCallback = (taskTitle: string) => {
     addTask({
-      description: '',
+      description: "",
       title: taskTitle,
       completed: false,
       status: TaskStatuses.New,
       priority: TaskPriorities.Low,
-      startDate: '',
-      deadline: '',
-      id: '',
-      todoListId: '',
+      startDate: "",
+      deadline: "",
+      id: "",
+      todoListId: "",
       order: 0,
-      addedDate: '',
-    });
-  };
+      addedDate: "",
+    })
+  }
 
   const changeTodolistTitleCallback = (newTitle: string) => {
-    changeTodolistTitle(tasksId, newTitle);
-  };
+    changeTodolistTitle(tasksId, newTitle)
+  }
 
   const setAllTasksHandler = () => {
-    changeFilter(tasksId, 'all');
-  };
+    changeFilter(tasksId, "all")
+  }
 
   const setActiveTasksHandler = () => {
-    changeFilter(tasksId, 'active');
-  };
+    changeFilter(tasksId, "active")
+  }
 
   const setCompletedTasksHandler = () => {
-    changeFilter(tasksId, 'completed');
-  };
+    changeFilter(tasksId, "completed")
+  }
   return (
     <div>
       <h3>
@@ -98,14 +94,14 @@ export const Todolist = ({
         </IconButton>
       </h3>
       <AddItemForm addItem={addItemCallback} />
-      {tasks.length === 0 ? <p>Тасок нет</p> : <List>{TaskMap}</List>}
+      {tasks && (tasks.length === 0 ? <p>Тасок нет</p> : <List>{TaskMap}</List>)}
       {/* filter={filter} */}
       <Box sx={buttonsContainerSx}>
         <Button
           size="small"
           variant="contained"
           disableElevation
-          color={filter === 'all' ? 'secondary' : 'primary'}
+          color={filter === "all" ? "secondary" : "primary"}
           onClick={setAllTasksHandler}
         >
           all
@@ -114,7 +110,7 @@ export const Todolist = ({
           size="small"
           variant="contained"
           disableElevation
-          color={filter === 'active' ? 'secondary' : 'primary'}
+          color={filter === "active" ? "secondary" : "primary"}
           onClick={setActiveTasksHandler}
         >
           active
@@ -123,7 +119,7 @@ export const Todolist = ({
           size="small"
           variant="contained"
           disableElevation
-          color={filter === 'completed' ? 'secondary' : 'primary'}
+          color={filter === "completed" ? "secondary" : "primary"}
           onClick={setCompletedTasksHandler}
         >
           completed
@@ -131,5 +127,5 @@ export const Todolist = ({
       </Box>
       <div>{date}</div>
     </div>
-  );
-};
+  )
+}

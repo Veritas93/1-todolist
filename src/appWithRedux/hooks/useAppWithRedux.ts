@@ -1,19 +1,14 @@
-import { useCallback } from 'react';
-import {
-  TodolistDomainType,
-  addTodosTC,
-} from '../../state/todolist/todolist-reducer';
+import { useCallback } from "react"
+import { TodolistDomainType, addTodosTC } from "../../state/todolist/todolistSlice"
 
-import { useSelector } from 'react-redux';
-import { AppRootStateType, useAppDispatch } from '../../state/store';
-import { getTasksTC } from '../../state/task/tasks-reducer';
+import { useSelector } from "react-redux"
+import { AppRootStateType, useAppDispatch } from "../../state/store"
+import { getTasksTC } from "../../state/task/tasksSlice"
 
 export const useAppWithRedux = () => {
-  const todoLists = useSelector<AppRootStateType, Array<TodolistDomainType>>(
-    (state) => state.todolists
-  );
+  const todoLists = useSelector<AppRootStateType, Array<TodolistDomainType>>((state) => state.todolists)
 
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
 
   // Task CRUD
   // const addTask = useCallback(
@@ -48,10 +43,10 @@ export const useAppWithRedux = () => {
   // Todolist CRUD
   const addTodolist = useCallback(
     (titleTodo: string) => {
-      dispatch(addTodosTC(titleTodo));
+      dispatch(addTodosTC(titleTodo))
     },
-    [dispatch]
-  );
+    [dispatch],
+  )
 
   // const changeFilter = useCallback(
   //   (tasksId: string, NewFilterValue: FilterType) => {
@@ -73,5 +68,5 @@ export const useAppWithRedux = () => {
   //   },
   //   [dispatch]
   // );
-  return { todoLists, addTodolist };
-};
+  return { todoLists, addTodolist }
+}

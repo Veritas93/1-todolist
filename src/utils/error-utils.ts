@@ -1,20 +1,17 @@
-import { Dispatch } from 'redux';
-import { setErrorAC, setStatusAC } from '../state/app-reducer';
-import { ResponceType } from '../todolists-api/todolist-api';
+import { Dispatch } from "redux"
+import { setError, setStatus } from "../state/appSlice"
+import { ResponceType } from "../todolists-api/todolist-api"
 
-export const handleServerAppError = <T>(
-  dispatch: Dispatch,
-  data: ResponceType<T>
-) => {
+export const handleServerAppError = <T>(dispatch: Dispatch, data: ResponceType<T>) => {
   if (data.messages.length) {
-    dispatch(setErrorAC(data.messages[0]));
+  dispatch(setError({error: data.messages[0]}))
   } else {
-    dispatch(setErrorAC('Something then wrong'));
+    dispatch(setError({error: "Something then wrong"}))
   }
-  dispatch(setStatusAC('failed'));
-};
+  dispatch(setStatus({status: "failed"}))
+}
 
-export const handleServerNetworkError = <T>(dispatch: Dispatch, err: {message: string}) => {
-  dispatch(setErrorAC(err.message));
-  dispatch(setStatusAC('failed'));
-};
+export const handleServerNetworkError = <T>(dispatch: Dispatch, err: { message: string }) => {
+  dispatch(setError({error: err.message}))
+  dispatch(setStatus({status: "failed"}))
+}

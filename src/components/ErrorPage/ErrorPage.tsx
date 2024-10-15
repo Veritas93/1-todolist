@@ -1,4 +1,4 @@
-import s from './Error.module.css'
+import s from "./Error.module.css"
 export const ErrorPage = () => {
   return (
     <div className={s.errorPage}>
@@ -7,5 +7,5 @@ export const ErrorPage = () => {
         <p>Page not found 404</p>
       </div>
     </div>
-  );
-};
+  )
+}
