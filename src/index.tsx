@@ -1,14 +1,28 @@
 import ReactDOM from "react-dom/client"
 import "./index.css"
-import AppWithRedux from "./appWithRedux/AppWithRedux"
+import AppWithRedux from "./app/appWithRedux/AppWithRedux"
 import { Provider } from "react-redux"
-import { store } from "./state/store"
-import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom"
-import { Login } from "./features/Login/Login"
-import { TodolistWithReduxWrapper } from "./features/Todolist/TodolistWithReduxWrapper"
-import { ErrorPage } from "./components/ErrorPage/ErrorPage"
+import { store } from "./app/model/store"
+import { Navigate, RouteObject, RouterProvider, createBrowserRouter } from "react-router-dom"
+import { Login } from "./features/auth/ui/Login"
+import { TodolistWithReduxWrapper } from "./features/todolist/ui/TodolistWithReduxWrapper"
+import { ErrorPage } from "./common/components/ErrorPage/ErrorPage"
+import { PrivateRoutes } from "features/auth/ui/PrivateRoutes"
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
+
+export const PATH = {
+  TODOLISTS: "/todolists",
+  ERROR: "/error",
+  LOGIN: "/login",
+} as const
+
+const publicRoutes: RouteObject[] = [
+  { path: PATH.LOGIN, element: <Login /> },
+  { path: PATH.ERROR, element: <ErrorPage /> },
+]
+
+const privateRoutes: RouteObject[] = [{ path: PATH.TODOLISTS, element: <TodolistWithReduxWrapper /> }]
 
 const router = createBrowserRouter([
   {
@@ -21,13 +35,10 @@ const router = createBrowserRouter([
         element: <Navigate to={"/todolists"} />,
       },
       {
-        path: "/login",
-        element: <Login />,
+        element: <PrivateRoutes />,
+        children: privateRoutes,
       },
-      {
-        path: "/todolists",
-        element: <TodolistWithReduxWrapper />,
-      },
+      ...publicRoutes,
     ],
   },
   {
