@@ -15,7 +15,7 @@ import { useAppDispatch, useAppSelector } from "../model/store"
 import { selectIsInitialized, selectStatus } from "../model/appSlice"
 import { CustomizedSnackbars } from "../../common/components/ErrorSnackBar/errorSnackBar"
 import { Outlet } from "react-router-dom"
-import { logOutTC, meTC, selectIsLoggedIn } from "../../features/auth/model/authSlice"
+import { logOut, initializedApp, selectIsLoggedIn } from "../../features/auth/model/authSlice"
 import CircularProgress from "@mui/material/CircularProgress"
 import { TaskType } from "common/types/commonType"
 
@@ -25,14 +25,14 @@ function AppWithRedux() {
   const isInitialized = useAppSelector(selectIsInitialized)
 
   const dispatch = useAppDispatch()
-  const logOut = useCallback(() => {
-    dispatch(logOutTC())
+  const logout = useCallback(() => {
+    dispatch(logOut())
   }, [])
 
   //DAL
 
   useEffect(() => {
-    dispatch(meTC())
+    dispatch(initializedApp())
   }, [])
 
   //BLL
@@ -65,7 +65,7 @@ function AppWithRedux() {
               <MenuIcon />
             </IconButton>
             <div>
-              {isLoggedIn && <MenuButton onClick={logOut}>Logout</MenuButton>}
+              {isLoggedIn && <MenuButton onClick={logout}>Logout</MenuButton>}
               <MenuButton background={theme.palette.primary.dark}>FAQ</MenuButton>
               <Switch color="secondary" onChange={() => setIsLight(!isLight)} />
             </div>

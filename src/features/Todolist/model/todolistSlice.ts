@@ -3,12 +3,12 @@ import { TodolistType, todolistApi } from "features/todolist/api/todolist-api"
 import { handleServerAppError } from "common/utils/handleServerAppError"
 import { handleServerNetworkError } from "common/utils/handleServerNetworkError"
 import { RequestStatusType, setStatus } from "../../../app/model/appSlice"
-import { AppThunkType } from "../../../app/model/store"
-import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { Dispatch, PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { Result_Code } from "features/todolist/lib/enums/enums"
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk"
 import { getTasks } from "features/todolist/task/model/tasksSlice"
 import { FilterType } from "common/types/commonType"
+import { thunkTryCatch } from "common/utils/thunkTryCatch"
 
 export const todolistsSlice = createSlice({
   name: "todolists",
@@ -28,11 +28,11 @@ export const todolistsSlice = createSlice({
     },
     SetTodolist: (state, action: PayloadAction<{ todos: TodolistType[] }>) => {
       //   // 1 var
-      //   // return action.payload.todos.map((tl) => ({...tl, filter: "all", entityStatus: "idle"}))
-      //   // 2 var
-      action.payload.todos.forEach((tl) => {
-        state.push({ ...tl, filter: "all", entityStatus: "idle" })
-      })
+        return action.payload.todos.map((tl) => ({...tl, filter: "all", entityStatus: "idle"}))
+        // 2 var
+      // action.payload.todos.forEach((tl) => {
+      //   state.push({ ...tl, filter: "all", entityStatus: "idle" })
+      // })
     },
     ClearData: (state) => {
       return (state = [])
@@ -100,41 +100,34 @@ export const addTodo = createAppAsyncThunk<{ todolist: TodolistType }, string>(
   `${todolistsSlice.name}/addTodo`,
   async (arg, thunkAPI) => {
     const { dispatch, rejectWithValue } = thunkAPI
-    try {
-      dispatch(setStatus({ status: "loading" }))
+    return thunkTryCatch(thunkAPI, async ()=>{
       const res = await todolistApi.createTodolist(arg)
-      if (res.data.resultCode === Result_Code.SUCCESS) {
-        dispatch(setStatus({ status: "succeeded" }))
-        return { todolist: res.data.data.item }
-      } else {
-        handleServerAppError(dispatch, res.data)
-        return rejectWithValue(null)
-      }
-    } catch (err) {
-      handleServerNetworkError(dispatch, err)
+    if (res.data.resultCode === Result_Code.SUCCESS) {
+      return { todolist: res.data.data.item }
+    } else {
+      handleServerAppError(dispatch, res.data)
       return rejectWithValue(null)
     }
+    })
   },
 )
-export const changeTodolistTitleTC =
-  (id: string, title: string): AppThunkType =>
-  (dispatch) => {
-    dispatch(setStatus({ status: "loading" }))
-    todolistApi
-      .updateTodolist(id, title)
-      .then((res) => {
-        if (res.data.resultCode === Result_Code.SUCCESS) {
-          dispatch(ChangeTodolistTitle({ id, title }))
-          dispatch(setStatus({ status: "succeeded" }))
-        } else {
-          handleServerAppError(dispatch, res.data)
-        }
-      })
-      .catch((err: AxiosError) => {
-        handleServerNetworkError(dispatch, err)
-        dispatch(ChangeEntityStatusTodolist({ todoId: id, entityStatus: "failed" }))
-      })
-  }
+export const changeTodolistTitleTC = (id: string, title: string) => (dispatch: Dispatch) => {
+  dispatch(setStatus({ status: "loading" }))
+  todolistApi
+    .updateTodolist(id, title)
+    .then((res) => {
+      if (res.data.resultCode === Result_Code.SUCCESS) {
+        dispatch(ChangeTodolistTitle({ id, title }))
+        dispatch(setStatus({ status: "succeeded" }))
+      } else {
+        handleServerAppError(dispatch, res.data)
+      }
+    })
+    .catch((err: AxiosError) => {
+      handleServerNetworkError(dispatch, err)
+      dispatch(ChangeEntityStatusTodolist({ todoId: id, entityStatus: "failed" }))
+    })
+}
 
 export type TodolistDomainType = TodolistType & {
   filter: FilterType

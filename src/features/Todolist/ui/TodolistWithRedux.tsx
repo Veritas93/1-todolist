@@ -88,7 +88,10 @@ export const TodolistWithRedux = memo(({ todolist }: TodolistPropsType) => {
       <AddItemForm addItem={addItemCallback} disabled={todolist.entityStatus === "loading"} />
       {tasks.length === 0 ? <p>Тасок нет</p> : <List>{TaskMap}</List>}
       <Box sx={buttonsContainerSx}>
-        <ButtonWrapper title={"all"} color={filter === "all" ? "secondary" : "primary"} onClick={setAllTasksHandler} />
+        <ButtonWrapper 
+        title={"all"} 
+        color={filter === "all" ? "secondary" : "primary"}
+         onClick={setAllTasksHandler} />
         <ButtonWrapper
           title={"active"}
           color={filter === "active" ? "secondary" : "primary"}

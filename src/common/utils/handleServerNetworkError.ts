@@ -1,5 +1,5 @@
 import { setError, setStatus } from "../../app/model/appSlice"
-import { AppDispatchType } from "app/model/store"
+import { AppDispatch } from "app/model/store"
 import axios from "axios"
 
 // export const handleServerNetworkError = <T>(dispatch: Dispatch, err: { message: string }) => {
@@ -7,7 +7,7 @@ import axios from "axios"
 //   dispatch(setStatus({status: "failed"}))
 // }
 
-export const handleServerNetworkError = (dispatch: AppDispatchType, err: unknown): void => {
+export const handleServerNetworkError = (dispatch: AppDispatch, err: unknown): void => {
   let errorMessage = "Some error occurred"
 
   // проверка на наличие axios ошибки

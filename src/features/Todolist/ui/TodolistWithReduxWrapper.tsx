@@ -4,7 +4,7 @@ import { Grid, Paper } from "@mui/material"
 import { useAppDispatch, useAppSelector } from "app/model/store"
 import { AddItemForm } from "common/components/addItemForm/AddItemForm"
 import { useEffect } from "react"
-import { getTodos } from "features/todolist/model/todolistSlice"
+import { getTodos} from "features/todolist/model/todolistSlice"
 import { selectIsLoggedIn } from "features/auth/model/authSlice"
 
 //UI

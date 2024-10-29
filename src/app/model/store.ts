@@ -22,16 +22,15 @@ export const store = configureStore({
 })
 // определить автоматически тип всего объекта состояния
 export type AppRootStateType = ReturnType<typeof store.getState>
-
-export type AppDispatchType = ThunkDispatch<AppRootStateType, unknown, AnyAction>
 // export type AppDispatch = typeof store.dispatch
+export type AppDispatch = ThunkDispatch<AppRootStateType, unknown, AnyAction>
 
-export const useAppDispatch = useDispatch<AppDispatchType>
+export const useAppDispatch = useDispatch<AppDispatch>
 export const useAppSelector: TypedUseSelectorHook<AppRootStateType> = useSelector
 
 // export type AppActionsType = TasksActionsType | TodolistActionsType | SetAppErrorType
 
-export type AppThunkType<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, UnknownAction>
+// export type AppThunkType<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, UnknownAction>
 
 // а это, чтобы можно было в консоли браузера обращаться к store в любой момент
 // @ts-ignore

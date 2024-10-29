@@ -8,24 +8,27 @@ import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import { useFormik } from "formik"
 import { useAppDispatch, useAppSelector } from "../../../app/model/store"
-import { loginTC } from "../model/authSlice"
+import { login } from "../model/authSlice"
 import { Navigate } from "react-router-dom"
 import { ErrorsType } from "./login.types"
+import { BaseResponse } from "common/types/commonType"
 
 const validate = (values: any) => {
-  const errors: ErrorsType = {}
-  if (!values.password) {
-    errors.password = "Password is require"
-  } else if (values.password.length < 6) {
-    errors.password = "Password must be at least 6 characters"
-  }
+  // const errors: ErrorsType = {}
+  // if (!values.password) {
+  //   errors.password = "Password is require"
+  // } 
+  // // else if (values.password.length < 6) {
+  // //   errors.password = "Password must be at least 6 characters"
+  // // }
 
-  if (!values.email) {
-    errors.email = "Required"
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = "Invalid email address"
-  }
-  return errors
+  // if (!values.email) {
+  //   errors.email = "Required"
+  // } 
+  // // else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+  // //   errors.email = "Invalid email address"
+  // // }
+  // return errors
 }
 
 export const Login = () => {
@@ -39,8 +42,16 @@ export const Login = () => {
       rememberMe: false,
     },
     validate,
-    onSubmit: (values) => {
-      dispatch(loginTC(values))
+    onSubmit: (values, formikHelpers) => {
+      dispatch(login({ data: values }))
+      .unwrap()
+      .catch((err: BaseResponse) => {
+        if(err.fieldsErrors) {
+          err.fieldsErrors.forEach((errField)=>{
+            formikHelpers.setFieldError(errField.field, errField.error)
+          })
+        }
+      })
       formik.resetForm()
     },
   })
@@ -68,10 +79,11 @@ export const Login = () => {
               <TextField
                 label="Email"
                 margin="normal"
-                error={!!formik.errors.email && formik.touched.email}
+                error={!!formik.errors.email}
                 {...formik.getFieldProps("email")}
               />
-              {formik.touched.email && formik.errors.email && <div style={{ color: "red" }}>{formik.errors.email}</div>}
+              {/* formik.touched.password &&  */}
+              {formik.errors.email && <div style={{ color: "red" }}>{formik.errors.email}</div>}
               <TextField
                 type="password"
                 label="Password"
@@ -80,10 +92,10 @@ export const Login = () => {
                 // onChange={formik.handleChange}
                 // value={formik.values.password}
                 // onBlur={formik.handleBlur}
-                error={!!formik.errors.password && formik.touched.password}
+                error={!!formik.errors.password }
                 {...formik.getFieldProps("password")}
               />
-              {formik.touched.password && formik.errors.password && (
+              {formik.errors.password && (
                 <div style={{ color: "red" }}>{formik.errors.password}</div>
               )}
               <FormControlLabel

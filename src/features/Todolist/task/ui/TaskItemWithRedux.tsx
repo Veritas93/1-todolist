@@ -33,7 +33,7 @@ export const TaskItemWithRedux = ({ tasksId, id, isDone, title }: TaskItemType) 
     [dispatch],
   )
   const removeTaskHandler = useCallback(() => {
-    dispatch(deleteTask({ taskId: tasksId, todoId: id }))
+    dispatch(deleteTask({ taskId: id, todoId: tasksId }))
   }, [dispatch])
 
   const changeTasksTitleCallback = useCallback(
