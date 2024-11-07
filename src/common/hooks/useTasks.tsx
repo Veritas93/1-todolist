@@ -3,7 +3,7 @@ import { v1 } from "uuid"
 import { TaskId1, TaskId2 } from "../../app/lib/id-utils"
 import { TaskStateType } from "../../app/ui/App"
 
-import { TaskType } from "common/types/commonType"
+import { Task } from "common/types/commonType"
 import { TaskPriorities, TaskStatuses } from "features/todolist/lib/enums/enums"
 
 export const useTasks = () => {
@@ -65,8 +65,8 @@ export const useTasks = () => {
       },
     ],
   })
-  const addTask = (task: TaskType) => {
-    const newTask: TaskType = {
+  const addTask = (task: Task) => {
+    const newTask: Task = {
       id: v1(),
       title: task.title,
       status: TaskStatuses.New,

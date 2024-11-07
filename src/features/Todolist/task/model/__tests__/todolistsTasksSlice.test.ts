@@ -1,7 +1,7 @@
 import { v1 } from "uuid"
-import { TaskStateType } from "../../../../app/appWithRedux/AppWithRedux"
-import { tasksReducer } from "./tasksSlice"
-import { TodolistDomainType, addTodo, todolistsReducer } from "../../model/todolistSlice"
+import { TaskStateType } from "../../../../../app/appWithRedux/AppWithRedux"
+import { tasksReducer } from "../tasksSlice"
+import { TodolistDomainType, addTodo, todolistsReducer } from "../../../model/todolistSlice"
 import { TestAction } from "common/types/commonType"
 
 test("ids should be equals", () => {

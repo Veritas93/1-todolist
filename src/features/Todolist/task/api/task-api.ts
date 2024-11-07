@@ -1,6 +1,7 @@
-import { BaseResponse, TaskType, UpdateDomainTaskModelType } from "../../../../common/types/commonType"
+import { BaseResponse, Task, UpdateDomainTaskModel } from "../../../../common/types/commonType"
 import { AxiosResponse } from "axios"
 import { instance } from "common"
+import { GetTasksResponse, AddTaskArgs } from "./taskApi.types"
 
 export const taskApi = {
   getTasks(todoId: string) {
@@ -12,14 +13,14 @@ export const taskApi = {
   createTask(arg: AddTaskArgs) {
     const { todoId, title } = arg
     return instance.post<
-      BaseResponse<{ item: TaskType }>,
-      AxiosResponse<BaseResponse<{ item: TaskType }>>,
+      BaseResponse<{ item: Task }>,
+      AxiosResponse<BaseResponse<{ item: Task }>>,
       { title: string }
     >(`/todo-lists/${todoId}/tasks`, { title })
   },
 
-  updateTask(idTodolist: string, taskId: string, model: UpdateDomainTaskModelType) {
-    return instance.put<BaseResponse<TaskType>>(`todo-lists/${idTodolist}/tasks/${taskId}`, model)
+  updateTask(idTodolist: string, taskId: string, model: UpdateDomainTaskModel) {
+    return instance.put<BaseResponse<Task>>(`todo-lists/${idTodolist}/tasks/${taskId}`, model)
   },
 
   deleteTask(idTodolist: string, taskId: string) {
@@ -27,24 +28,4 @@ export const taskApi = {
   },
 }
 
-export type UpdateTaskArg = {
-  todoId: string
-  domainModel: UpdateDomainTaskModelType
-  taskId: string
-}
 
-export type AddTaskArgs = {
-  todoId: string
-  title: string
-}
-
-type GetTasksResponse = {
-  error: string | null
-  totalCount: number
-  items: TaskType[]
-}
-
-export type DeleteTaskArg = {
-  todoId: string
-  taskId: string
-}

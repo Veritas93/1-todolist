@@ -1,15 +1,15 @@
 import { TaskStateType } from "app/appWithRedux/AppWithRedux"
 import { ClearData, SetTodolist, addTodo, removeTodo } from "../../model/todolistSlice"
-
-import { AddTaskArgs, DeleteTaskArg, UpdateTaskArg, taskApi } from "features/todolist/task/api/task-api"
+import { taskApi } from "features/todolist/task/api/task-api"
 import { setStatus } from "app/model/appSlice"
 import { handleServerAppError } from "common/utils/handleServerAppError"
 import { handleServerNetworkError } from "common/utils/handleServerNetworkError"
 import { createSlice } from "@reduxjs/toolkit"
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk"
-import { Result_Code } from "features/todolist/lib/enums/enums"
-import { TaskType, UpdateTaskModelType } from "common/types/commonType"
+import { Result_Code, TaskStatuses } from "features/todolist/lib/enums/enums"
+import { FilterValues, Task, UpdateTaskModel } from "common/types/commonType"
 import { thunkTryCatch } from "common/utils/thunkTryCatch"
+import { AddTaskArgs, DeleteTaskArg, UpdateTaskArg } from "../api/taskApi.types"
 
 const initialState: TaskStateType = {}
 
@@ -53,14 +53,22 @@ export const tasksSlice = createSlice({
       })
   },
   selectors: {
-    selectTasks: (sliceState) => sliceState,
+    selectFilteredTasks: (sliceState, todoId: string, filter: FilterValues) => {
+      let tasks = sliceState[todoId]
+      if (filter === "active") {
+        tasks = tasks.filter((t) => t.status === TaskStatuses.New)
+      }
+      if (filter === "completed") {
+        tasks = tasks.filter((t) => t.status === TaskStatuses.Completed)
+      }
+      return tasks}
   },
 })
 
 export const tasksReducer = tasksSlice.reducer
-export const { selectTasks } = tasksSlice.selectors
+export const { selectFilteredTasks } = tasksSlice.selectors
 
-export const getTasks = createAppAsyncThunk<{ tasks: TaskType[]; todoId: string }, string>(
+export const getTasks = createAppAsyncThunk<{ tasks: Task[]; todoId: string }, string>(
   `${tasksSlice.name}/getTasks`,
   async (todoId, thunkAPI) => {
     const { dispatch, rejectWithValue } = thunkAPI
@@ -75,7 +83,7 @@ export const getTasks = createAppAsyncThunk<{ tasks: TaskType[]; todoId: string 
     }
   },
 )
-export const addTask = createAppAsyncThunk<{ task: TaskType }, AddTaskArgs>(
+export const addTask = createAppAsyncThunk<{ task: Task }, AddTaskArgs>(
   `${tasksSlice.name}/addTask`,
   async (arg, thunkAPI) => {
     const { dispatch, rejectWithValue } = thunkAPI
@@ -90,8 +98,6 @@ export const addTask = createAppAsyncThunk<{ task: TaskType }, AddTaskArgs>(
     }) 
   },
 )
-
-
 export const updateTask = createAppAsyncThunk<UpdateTaskArg, UpdateTaskArg>(
   `${tasksSlice.name}/updateTask`,
   async (arg, thunkAPI) => {
@@ -105,7 +111,7 @@ export const updateTask = createAppAsyncThunk<UpdateTaskArg, UpdateTaskArg>(
         console.warn("task not found is the state")
         return rejectWithValue(null)
       }
-      const apiModel: UpdateTaskModelType = {
+      const apiModel: UpdateTaskModel = {
         title: task.title,
         description: task.description,
         status: task.status,
@@ -129,7 +135,6 @@ export const updateTask = createAppAsyncThunk<UpdateTaskArg, UpdateTaskArg>(
     }
   },
 )
-
 export const deleteTask = createAppAsyncThunk<DeleteTaskArg, DeleteTaskArg>(
   `${tasksSlice.name}/deleteTask`,
   async (arg, thunkAPI) => {

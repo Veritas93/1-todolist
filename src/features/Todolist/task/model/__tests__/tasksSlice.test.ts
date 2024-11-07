@@ -1,7 +1,7 @@
 import { v1 } from "uuid"
 import { TaskStateType } from "app/appWithRedux/AppWithRedux"
-import { addTask, updateTask, deleteTask, tasksReducer, getTasks } from "./tasksSlice"
-import { addTodo, removeTodo } from "../../model/todolistSlice"
+import { addTask, updateTask, deleteTask, tasksReducer, getTasks } from "../tasksSlice"
+import { addTodo, removeTodo } from "../../../model/todolistSlice"
 import { TestAction } from "common/types/commonType"
 import { TaskPriorities, TaskStatuses } from "features/todolist/lib/enums/enums"
 

@@ -10,7 +10,7 @@ export type BaseResponse<T = {}> = {
   messages: string[]
 }
 
-export type TaskType = {
+export type Task = {
   description: string
   title: string
   completed: boolean
@@ -24,8 +24,8 @@ export type TaskType = {
   addedDate: string
 }
 
-export type UpdateDomainTaskModelType = Partial<UpdateTaskModelType>
-export type UpdateTaskModelType = {
+export type UpdateDomainTaskModel = Partial<UpdateTaskModel>
+export type UpdateTaskModel = {
   title: string
   description: string
   status: TaskStatuses
@@ -33,4 +33,4 @@ export type UpdateTaskModelType = {
   startDate: string
   deadline: string
 }
-export type FilterType = "all" | "active" | "completed"
+export type FilterValues = "all" | "active" | "completed"

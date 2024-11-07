@@ -15,10 +15,10 @@ import { amber, green } from "@mui/material/colors"
 import Switch from "@mui/material/Switch"
 import { useTodolist } from "../../common/hooks/useTodolist"
 import { useTasks } from "../../common/hooks/useTasks"
-import { TaskType } from "common/types/commonType"
+import { Task} from "common/types/commonType"
 
 export type TaskStateType = {
-  [taskId: string]: TaskType[]
+  [taskId: string]: Task[]
 }
 
 function App() {
@@ -43,7 +43,7 @@ function App() {
 
   //UI
   const todolistComp: Array<JSX.Element> = todoList.map((el) => {
-    let filterTasksForTodolist: TaskType[] = tasks[el.id]
+    let filterTasksForTodolist: Task[] = tasks[el.id]
     if (el.filter === "active") {
       filterTasksForTodolist = filterTasksForTodolist.filter((t) => !t.status)
     }

@@ -6,20 +6,20 @@ import Button from "@mui/material/Button"
 import IconButton from "@mui/material/IconButton"
 import List from "@mui/material/List"
 import Box from "@mui/material/Box"
-import { buttonsContainerSx } from "../Todolist.Styles"
+import { buttonsContainerSx } from "./Todolist.Styles"
 import { TaskPriorities, TaskStatuses } from "features/todolist/lib/enums/enums"
-import { FilterType, TaskType } from "common/types/commonType"
+import { FilterValues, Task } from "common/types/commonType"
 
 export type TodolistPropsType = {
   tasksId: string
-  filter: FilterType
+  filter: FilterValues
   title: string
-  tasks: TaskType[]
+  tasks: Task[]
   date?: string
 
   removeTask: (taskID: string, id: string) => void
-  changeFilter: (tasksId: string, NewFilterValue: FilterType) => void
-  addTask: (task: TaskType) => void
+  changeFilter: (tasksId: string, NewFilterValue: FilterValues) => void
+  addTask: (task: Task) => void
   changeTasksStatus: (taskID: string, id: string, status: TaskStatuses) => void
   removeTodolist: (taskID: string) => void
   changeTasksTitle: (taskID: string, id: string, title: string) => void

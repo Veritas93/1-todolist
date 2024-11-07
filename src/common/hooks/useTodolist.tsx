@@ -2,7 +2,7 @@ import { useState } from "react"
 import { v1 } from "uuid"
 import { TaskId1, TaskId2 } from "../../app/lib/id-utils"
 import { TodolistDomainType } from "features/todolist/model/todolistSlice"
-import { FilterType } from "common/types/commonType"
+import { FilterValues } from "common/types/commonType"
 
 export const useTodolist = (onTodolistRemove: (id: string) => void, onTodolistAddTasks: (id: string) => void) => {
   const [todoList, setTodoList] = useState<TodolistDomainType[]>([
@@ -39,7 +39,7 @@ export const useTodolist = (onTodolistRemove: (id: string) => void, onTodolistAd
     onTodolistAddTasks(TaskIdNew)
   }
 
-  const changeFilter = (tasksId: string, NewFilterValue: FilterType) => {
+  const changeFilter = (tasksId: string, NewFilterValue: FilterValues) => {
     setTodoList(todoList.map((el) => (el.id === tasksId ? { ...el, filter: NewFilterValue } : el)))
   }
 

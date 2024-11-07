@@ -6,55 +6,16 @@ import FormGroup from "@mui/material/FormGroup"
 import FormLabel from "@mui/material/FormLabel"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
-import { useFormik } from "formik"
-import { useAppDispatch, useAppSelector } from "../../../app/model/store"
-import { login } from "../model/authSlice"
+import {  useAppSelector } from "../../../app/model/store"
 import { Navigate } from "react-router-dom"
-import { ErrorsType } from "./login.types"
-import { BaseResponse } from "common/types/commonType"
+import { useLogin } from "../lib/hooks/useLogin"
 
-const validate = (values: any) => {
-  // const errors: ErrorsType = {}
-  // if (!values.password) {
-  //   errors.password = "Password is require"
-  // } 
-  // // else if (values.password.length < 6) {
-  // //   errors.password = "Password must be at least 6 characters"
-  // // }
-
-  // if (!values.email) {
-  //   errors.email = "Required"
-  // } 
-  // // else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-  // //   errors.email = "Invalid email address"
-  // // }
-  // return errors
-}
 
 export const Login = () => {
-  const dispatch = useAppDispatch()
-  const isLoggedIn = useAppSelector((i) => i.auth.isLoggedIn)
+  // const isLoggedIn = useAppSelector((i) => i.auth.isLoggedIn)
+  const {formik, isLoggedIn } = useLogin()
 
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-      rememberMe: false,
-    },
-    validate,
-    onSubmit: (values, formikHelpers) => {
-      dispatch(login({ data: values }))
-      .unwrap()
-      .catch((err: BaseResponse) => {
-        if(err.fieldsErrors) {
-          err.fieldsErrors.forEach((errField)=>{
-            formikHelpers.setFieldError(errField.field, errField.error)
-          })
-        }
-      })
-      formik.resetForm()
-    },
-  })
+ 
 
   if (isLoggedIn === true) {
     return <Navigate to="/todolists" />

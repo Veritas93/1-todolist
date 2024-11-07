@@ -4,7 +4,7 @@ import IconButton from "@mui/material/IconButton"
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
 import Checkbox from "@mui/material/Checkbox"
 import ListItem from "@mui/material/ListItem"
-import { getListItemSx } from "features/todolist/Todolist.Styles"
+import { getListItemSx } from "features/todolist/ui/Todolist.Styles"
 import { TaskStatuses } from "features/todolist/lib/enums/enums"
 
 type TaskItemType = {

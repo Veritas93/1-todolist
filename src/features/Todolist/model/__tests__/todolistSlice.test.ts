@@ -6,7 +6,7 @@ import {
   addTodo,
   removeTodo,
   todolistsReducer,
-} from "./todolistSlice"
+} from "../todolistSlice"
 import { v1 } from "uuid"
 let todolistId1: string
 let todolistId2: string

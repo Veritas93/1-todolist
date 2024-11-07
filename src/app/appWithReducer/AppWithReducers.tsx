@@ -23,7 +23,7 @@ import {
 } from "../../features/todolist/model/todolistSlice"
 import { addTask, deleteTask, tasksReducer, updateTask } from "features/todolist/task/model/tasksSlice"
 import { TaskPriorities, TaskStatuses } from "features/todolist/lib/enums/enums"
-import { FilterType, TaskType } from "common/types/commonType"
+import { FilterValues, Task } from "common/types/commonType"
 
 function AppWithReducers() {
   //BLL
@@ -109,7 +109,7 @@ function AppWithReducers() {
   })
 
   // Task CRUD
-  const addTaskHandler = (task: TaskType) => {
+  const addTaskHandler = (task: Task) => {
     const action: any = addTask({ todoId: task.todoListId, title: task.title })
     dispatchToTasks(action)
   }
@@ -136,7 +136,7 @@ function AppWithReducers() {
     dispatchToTasks(action)
   }
 
-  const changeFilter = (tasksId: string, NewFilterValue: FilterType) => {
+  const changeFilter = (tasksId: string, NewFilterValue: FilterValues) => {
     const action = ChangeTodolistFilter({ id: tasksId, filter: NewFilterValue })
     dispatchToTodoList(action)
   }
@@ -153,7 +153,7 @@ function AppWithReducers() {
   }
   //UI
   const todolistComp: Array<JSX.Element> = todoList.map((el) => {
-    let filterTasksForTodolist: TaskType[] = tasks[el.id]
+    let filterTasksForTodolist: Task[] = tasks[el.id]
     if (el.filter === "active") {
       filterTasksForTodolist = filterTasksForTodolist.filter((t) => t.status === TaskStatuses.New)
     }

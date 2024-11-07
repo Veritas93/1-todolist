@@ -17,7 +17,7 @@ import { CustomizedSnackbars } from "../../common/components/ErrorSnackBar/error
 import { Outlet } from "react-router-dom"
 import { logOut, initializedApp, selectIsLoggedIn } from "../../features/auth/model/authSlice"
 import CircularProgress from "@mui/material/CircularProgress"
-import { TaskType } from "common/types/commonType"
+import { Task } from "common/types/commonType"
 
 function AppWithRedux() {
   const status = useAppSelector(selectStatus)
@@ -86,5 +86,5 @@ function AppWithRedux() {
 export default AppWithRedux
 
 export type TaskStateType = {
-  [taskId: string]: TaskType[]
+  [taskId: string]: Task[]
 }

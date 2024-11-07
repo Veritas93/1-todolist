@@ -5,7 +5,7 @@ import { useSelector } from "react-redux"
 import { AppRootStateType } from "../../../../app/model/store"
 import { v1 } from "uuid"
 import { TaskPriorities, TaskStatuses } from "features/todolist/lib/enums/enums"
-import { TaskType } from "common/types/commonType"
+import { Task } from "common/types/commonType"
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta: Meta<typeof TaskItemWithRedux> = {
@@ -38,7 +38,7 @@ export default meta
 type Story = StoryObj<typeof TaskItemWithRedux>
 
 const TaskItem = () => {
-  let task = useSelector<AppRootStateType, TaskType>((state) => state.tasks["todolistId1"][0])
+  let task = useSelector<AppRootStateType, Task>((state) => state.tasks["todolistId1"][0])
   if (!task)
     task = {
       id: v1(),
