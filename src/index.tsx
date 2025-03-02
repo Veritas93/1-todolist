@@ -42,13 +42,7 @@ const router = createHashRouter([
       ...publicRoutes,
     ],
   },
-  // {
-  //   path: "/404",
-  //   element: <ErrorPage />,
-  // },
-], {
-  basename: PATH.ROOT
-}
+], 
 )
 
 root.render(

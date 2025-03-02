@@ -1,6 +1,6 @@
 .errorPage {
   display: flex;
-  margin-top: 20%;
-  justify-content: center;
-  align-content: center;
+  margin: 250px auto;
+  justify-content: center !important;
+  align-content: center !important;
 }
