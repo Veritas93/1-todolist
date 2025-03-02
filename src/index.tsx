@@ -45,7 +45,10 @@ const router = createBrowserRouter([
     path: "/404",
     element: <ErrorPage />,
   },
-])
+], {
+  basename: "/1-todolist"
+}
+)
 
 root.render(
   <Provider store={store}>
